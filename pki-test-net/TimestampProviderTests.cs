@@ -79,7 +79,8 @@ namespace Egelke.EHealth.Client.Pki.Test
             //tsa.Endpoint.Behaviors.Remove<ClientCredentials>();
             //tsa.Endpoint.Behaviors.Add(new OptClientCredentials());
             tsa.ClientCredentials.ServiceCertificate.DefaultCertificate = ehSsl; //not really used, but better then the workaround
-            tsa.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindByThumbprint, "f794b1966a1bd1a1760bbe3a1e72f9cae1fa118c");
+            //tsa.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindByThumbprint, "f794b1966a1bd1a1760bbe3a1e72f9cae1fa118c");
+            tsa.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindByThumbprint, "76ebefc0be16c2d736ccf774b5c24672a96f412f");
 
             var provider = new EHealthTimestampProvider(tsa);
 

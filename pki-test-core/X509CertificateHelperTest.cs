@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Org.BouncyCastle.Asn1;
@@ -46,6 +49,22 @@ namespace Egelke.EHealth.Client.Pki.Test
             oldEidOcsp = BasicOcspResponse.GetInstance(Asn1Sequence.GetInstance(File.ReadAllBytes(@"files/eid79021802145.ocsp")));
             oldEidOcsp2 = BasicOcspResponse.GetInstance(Asn1Sequence.GetInstance(File.ReadAllBytes(@"files/eid79021802145-2.ocsp")));
             oldEidCrl = CertificateList.GetInstance(Asn1Sequence.GetInstance(File.ReadAllBytes(@"files/eid79021802145.crl")));
+
+            X509Store my = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            my.Open(OpenFlags.ReadOnly);
+            try
+            {
+                X509Certificate2Collection fcollection = my.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now, false);
+                X509Certificate2Collection acollection = X509Certificate2UI.SelectFromCollection(fcollection, "Certificate Select", "Select a authentication certificate (e.g. eID)", X509SelectionFlag.SingleSelection);
+                X509Certificate2 auth = acollection[0];
+                ECDsa pub = auth.GetECDsaPublicKey();
+                ECDsa priv = auth.GetECDsaPrivateKey();
+                priv.SignData(Encoding.UTF8.GetBytes("boe"), HashAlgorithmName.SHA384);
+            }
+            finally
+            {
+                my.Close();
+            }
         }
 
 

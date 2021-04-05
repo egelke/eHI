@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.ServiceModel.Channels;
 using System.Text;
 
-namespace Egelke.EHealth.Client.Sso.Sts
+namespace Egelke.EHealth.Client.Sso
 {
-    public class StsBinding : Binding
+    public class EHealthBasicBinding : Binding
     {
-        //private SecurityBindingElement security;
+        private BindingElement security;
 
-        private MessageEncodingBindingElement messageEncoding;
+        private BindingElement messageEncoding;
 
-        private TransportBindingElement transport;
+        private BindingElement transport;
 
-        public StsBinding()
+        public EHealthBasicBinding()
         {
-            //security = CreateSecurity();
+            security = CreateSecurity();
             messageEncoding = CreateMessageEncoding();
             transport = CreateTransport();
         }
@@ -23,19 +23,20 @@ namespace Egelke.EHealth.Client.Sso.Sts
         public override BindingElementCollection CreateBindingElements()
         {
             BindingElementCollection elements = new BindingElementCollection();
+            elements.Add(security);
             elements.Add(messageEncoding);
             elements.Add(transport);
             return elements.Clone();
         }
 
-        private MessageEncodingBindingElement CreateMessageEncoding()
+        private BindingElement CreateMessageEncoding()
         {
             TextMessageEncodingBindingElement encoding = new TextMessageEncodingBindingElement();
             encoding.MessageVersion = MessageVersion.Soap11;
             return encoding;
         }
 
-        private TransportBindingElement CreateTransport()
+        private BindingElement CreateTransport()
         {
             HttpsTransportBindingElement transport = new HttpsTransportBindingElement();
             transport.AuthenticationScheme = System.Net.AuthenticationSchemes.Anonymous;
@@ -44,6 +45,13 @@ namespace Egelke.EHealth.Client.Sso.Sts
             return transport;
         }
 
-        public override string Scheme => transport.Scheme;
+        private BindingElement CreateSecurity()
+        {
+            EHealthBaseSecurityBindingElement security = new EHealthBaseSecurityBindingElement();
+            //TransportSecurityBindingElement security = SecurityBindingElement.CreateUserNameOverTransportBindingElement();
+            return security;
+        }
+
+        public override string Scheme => ((TransportBindingElement) transport).Scheme;
     }
 }

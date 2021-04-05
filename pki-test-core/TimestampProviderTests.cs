@@ -15,7 +15,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Egelke.EHealth.Client.Sso;
-using Egelke.EHealth.Client.Sso.Sts;
 
 namespace Egelke.EHealth.Client.Pki.Test
 {
@@ -87,12 +86,14 @@ namespace Egelke.EHealth.Client.Pki.Test
             //https://docs.microsoft.com/en-us/dotnet/framework/network-programming/tls#configuring-security-via-the-windows-registry
 
             var tsa = new TimeStampAuthorityClient(
-                new StsBinding(),
+                new EHealthBasicBinding(),
                 new EndpointAddress(new Uri("https://services-acpt.ehealth.fgov.be/TimestampAuthority/v2")));
             //tsa.Endpoint.Behaviors.Remove<ClientCredentials>();
             //tsa.Endpoint.Behaviors.Add(new OptClientCredentials());
             //tsa.ClientCredentials.ServiceCertificate.DefaultCertificate = ehSsl; //not really used, but better then the workaround
             tsa.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindByThumbprint, "f794b1966a1bd1a1760bbe3a1e72f9cae1fa118c");
+            tsa.ClientCredentials.UserName.UserName = "egelke";
+            tsa.ClientCredentials.UserName.Password = "dummy";
 
             var provider = new EHealthTimestampProvider(tsa);
 
