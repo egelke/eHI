@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
 	<PropertyGroup>
-		<TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net462;net6.0</TargetFrameworks>
 		<RootNamespace>Egelke.EHealth.Etee.Crypto</RootNamespace>
 		<AssemblyName>Egelke.EHealth.Etee.Crypto</AssemblyName>
 		<Version>3.0.0-RC1</Version>
+		<AssemblyVersion>3.0.0.0</AssemblyVersion>
+		<FileVersion>3.0.0.0</FileVersion>
 		<Authors>Egelke BVBA</Authors>
 		<Product>E2EE</Product>
 		<Description>.Net End-To-End Encryption Library for eHealth</Description>
@@ -14,7 +16,7 @@
 		<PackageReleaseNotes>Support for ECDSA keys</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<SignAssembly>true</SignAssembly>
-		<RepositoryUrl>https://github.com/egelke/etee.git</RepositoryUrl>
+		<RepositoryUrl>https://github.com/egelke/ehi.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<IncludeSource>true</IncludeSource>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>

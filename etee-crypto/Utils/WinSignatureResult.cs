@@ -73,6 +73,13 @@ namespace Egelke.EHealth.Etee.Crypto.Utils
             return signature.Length;
         }
 
+        public int Collect(Span<byte> output)
+        {
+            byte[] signature = Collect();
+            signature.CopyTo(output);
+            return signature.Length;
+        }
+
         public int GetMaxResultLength()
         {
             //todo::calculate, for now return 8KBit in bytes (to allow for really big RSA keys)

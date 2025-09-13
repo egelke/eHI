@@ -16,9 +16,5 @@ namespace Egelke.EHealth.Client.Services
         {
             Code = code;
         }
-
-        public ServiceException(string code, string message, Exception innerException) : base(message, innerException) {
-            Code = code;
-        }
     }
 }
