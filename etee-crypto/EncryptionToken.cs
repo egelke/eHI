@@ -76,7 +76,7 @@ namespace Egelke.EHealth.Etee.Crypto
             raw = new CmsSignedData(data);
         }
 
-        internal X509Certificate2 ToCertificate()
+        public X509Certificate2 ToCertificate()
         {
             return new X509Certificate2(Content);
         }

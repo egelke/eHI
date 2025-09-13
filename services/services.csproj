@@ -15,7 +15,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\library-core\library-core.csproj" />
-		<PackageReference Include="Egelke.EHealth.Etee.Crypto" Version="2.3.0" />
+		<ProjectReference Include="..\etee-crypto\etee-crypto.csproj" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[9.0.0,)" />
 	</ItemGroup>
 

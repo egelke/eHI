@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Egelke.EHealth.Etee.Crypto;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Asn1.Pkcs;
 
 namespace Egelke.EHealth.Client.Services.EtkDepot
 {
@@ -18,7 +19,7 @@ namespace Egelke.EHealth.Client.Services.EtkDepot
 
 
         public EtkDepotClient(EndpointAddress remoteAddress, ILogger<EtkDepotClient> logger = null)
-            : base(new EhBinding(), remoteAddress)
+            : base(new BasicHttpsBinding(), remoteAddress)
         {
             _logger = logger;
         }
@@ -39,14 +40,39 @@ namespace Egelke.EHealth.Client.Services.EtkDepot
                 } 
             };
 
-            var rsp = Channel.GetEtk(req)?.GetEtkResponse;
-
-            if (rsp?.Status?.Code != "")
+            _logger?.LogInformation("Retreiving Etk(s) from depot, # criteria={}", searchCriteria?.Length);
+            foreach (IdentifierType identifier in searchCriteria)
             {
-                //rsp?.Status?.Message?.FirstOrDefault()
-                throw new ServiceException(rsp?.Status?.Code);
+                _logger?.LogDebug("Retreiving Etk from depot for {0}={1}, {2}",
+                    identifier.Type, identifier.Value, identifier.ApplicationID);
             }
-            return null;
+            var rsp = Channel.GetEtk(req)?.GetEtkResponse;
+            _logger?.LogInformation("Retrived Etk(s) from depot: Status={0}, Message=\"{1}\", # items={1}", 
+                rsp?.Status?.Code, rsp?.Status?.Message?.FirstOrDefault()?.Value, rsp?.Items?.Length);
+
+            if (rsp?.Status?.Code != "200")
+            {
+                _logger?.LogWarning("Failed to obtain ETK, Status Error returned {0}: {1}", rsp?.Status?.Code, 
+                    String.Join(", ",rsp?.Status?.Message?.Select(m => m?.Value)));
+                throw new ServiceException(rsp?.Status?.Code, rsp?.Status?.Message?.FirstOrDefault()?.Value);
+            }
+            var errors = rsp.Items
+                .OfType<ErrorType1>()
+                .ToList();
+            foreach (var error in errors) {
+                _logger?.LogWarning("Failed to obtain ETK, Message Error returned {0}: {1}", error.Code, error.Message);
+            }
+            if (errors.Any())
+            {
+                var error = errors.First();
+                throw new ServiceException(error.Code, error.Message);
+            }
+
+
+            return rsp.Items
+                .OfType<byte[]>()
+                .Select(i => new EncryptionToken(i))
+                .ToArray();
         }
     }
 }

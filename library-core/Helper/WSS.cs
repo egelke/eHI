@@ -24,6 +24,7 @@ using System.Security.Cryptography.Xml;
 using System.ServiceModel.Security;
 using System.Xml;
 using System.IdentityModel.Tokens;
+using Egelke.EHealth.Client.Pki.ECDSA;
 
 namespace Egelke.EHealth.Client.Helper
 {
@@ -192,6 +193,7 @@ namespace Egelke.EHealth.Client.Helper
             }
             else if (proofToken.Certificate.GetECDsaPrivateKey() != null)
             {
+                ECDSAConfig.Init();  //ensure that we can sign with ECDSA
                 signedDoc.SigningKey = proofToken.Certificate.GetECDsaPrivateKey();
                 signedDoc.SignedInfo.SignatureMethod = "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256";
             }
