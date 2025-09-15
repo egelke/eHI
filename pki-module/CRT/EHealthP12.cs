@@ -75,7 +75,7 @@ namespace Egelke.EHealth.Client.Pki
         public EHealthP12(String file, String pwd)
         {
             password = pwd;
-            using (FileStream fileStream = new FileStream(file, FileMode.Open))
+            using (FileStream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 store = new Pkcs12StoreBuilder().Build();
                 store.Load(fileStream, pwd.ToCharArray());
