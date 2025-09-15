@@ -4,12 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime;
+using System.Security;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Egelke.EHealth.Client.Pki;
+using Egelke.EHealth.Etee.Crypto;
+using Egelke.EHealth.Etee.Crypto.Receiver;
+using Egelke.EHealth.Etee.Crypto.Status;
 using Microsoft.Extensions.Logging;
 
 namespace Egelke.EHealth.Client.Services.Mda
@@ -23,6 +28,8 @@ namespace Egelke.EHealth.Client.Services.Mda
 
         private const string CIN_TYPES_NS = "urn:be:cin:types:v1";
 
+        private const string CIN_ENC_NS = "urn:be:cin:encrypted";
+
         private readonly ILogger<McnMdaClient> _logger;
 
         public LicenseType License { get; set; }
@@ -30,6 +37,10 @@ namespace Egelke.EHealth.Client.Services.Mda
         public CareProviderType CareProvider { get; set; }
 
         public bool IsTest { get; set; } = true;
+
+        public EncryptionToken Etk {  get; set; }
+
+        public List<EHealthP12> DecryptionKeys { get; set; } = new List<EHealthP12>();
 
         public McnMdaClient(Binding binding, EndpointAddress remoteAddress, ILogger<McnMdaClient> logger = null) 
             : base(binding, remoteAddress)
@@ -130,7 +141,8 @@ namespace Egelke.EHealth.Client.Services.Mda
                 {
                     ContentType = "text/xml",
                     ContentEncoding = "none",
-                    Value = reqBodyStream.ToArray()
+                    Value = reqBodyStream.ToArray(),
+                    Etk = Etk?.GetEncoded()
                 }
             };
 
@@ -146,10 +158,19 @@ namespace Egelke.EHealth.Client.Services.Mda
                 rsp?.CommonOutput?.OutputReference,
                 rsp?.CommonOutput?.NIPReference);
 
-            string enc = rsp?.Detail?.ContentEncryption;
-            if (enc != null) throw new NotImplementedException("encryption is not yet supported");
+            byte[] rspBody;
+            switch(rsp?.Detail?.ContentEncryption)
+            {
+                case null:
+                    rspBody = rsp?.Detail?.Value;
+                    break;
+                case "encryptedForKnownRecipient":
+                    rspBody = DecryptForKnown(rsp?.Detail?.Value);
+                    break;
+                default:
+                    throw new NotImplementedException("encryption is not yet supported");
+            }
 
-            byte[] rspBody = rsp?.Detail?.Value;
             _logger?.LogDebug("Recieved respronse for {0}: {1}",
                 req.CommonInput.InputReference,
                 Encoding.UTF8.GetString(rspBody));
@@ -162,6 +183,7 @@ namespace Egelke.EHealth.Client.Services.Mda
             rspMngr.AddNamespace("saml2p", SAML2P_NS);
             rspMngr.AddNamespace("saml2", SAML2_NS);
             rspMngr.AddNamespace("t", CIN_TYPES_NS);
+            
 
             string statusCode = rspDoc.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusCode/@Value", rspMngr)?.Value;
             if (statusCode != "urn:oasis:names:tc:SAML:2.0:status:Success")
@@ -175,6 +197,30 @@ namespace Egelke.EHealth.Client.Services.Mda
             }
 
             return rspDoc.SelectNodes("/saml2p:Response/saml2:Assertion", rspMngr).Cast<XmlElement>();
+        }
+
+        private byte[] DecryptForKnown(byte[] cypherText)
+        {
+            var receiverFactory = new DataUnsealerFactory();
+            var receiver = receiverFactory.Create(Level.B_Level, DecryptionKeys.ToArray());
+
+            Stream cypherStream = new MemoryStream(cypherText);
+            UnsealResult result = receiver.Unseal(cypherStream);
+
+            if (result.SecurityInformation.ValidationStatus != ValidationStatus.Valid)
+                throw new SecurityException("Clear text not valid");
+            if (result.SecurityInformation.TrustStatus == TrustStatus.None)
+                throw new SecurityException("Clear text untrused");
+
+            var encDoc = new XmlDocument();
+            encDoc.PreserveWhitespace = true;
+            encDoc.Load(result.UnsealedData);
+
+            XmlNamespaceManager encMngr = new XmlNamespaceManager(encDoc.NameTable);
+            encMngr.AddNamespace("e", CIN_ENC_NS);
+
+            string businessContentStr = encDoc.SelectSingleNode("/e:EncryptedKnownContent/e:BusinessContent", encMngr)?.InnerText;
+            return Convert.FromBase64String(businessContentStr);
         }
     }
 }

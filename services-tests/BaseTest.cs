@@ -17,6 +17,8 @@ namespace services_tests
     {
         protected ILoggerFactory loggerFactory;
 
+        protected EHealthP12 store;
+
         protected X509Certificate2 idCert;
 
         protected X509Certificate2 sessionCert;
@@ -34,8 +36,8 @@ namespace services_tests
 
             wstEp = new EndpointAddress("https://services-acpt.ehealth.fgov.be/IAM/SecurityTokenService/v1");
 
-            var p12 = new EHealthP12("files/SSIN=79021802145 20250514-082150.acc.p12", File.ReadAllText("files/SSIN=79021802145 20250514-082150.acc.p12.pwd"));
-            idCert = p12["authentication"];
+            store = new EHealthP12("files/SSIN=79021802145 20250514-082150.acc.p12", File.ReadAllText("files/SSIN=79021802145 20250514-082150.acc.p12.pwd"));
+            idCert = store["authentication"];
             sessionCert = null;
 
             Match match = Regex.Match(idCert.Subject, @"(SSIN|SERIALNUMBER)=(\d{11})");
