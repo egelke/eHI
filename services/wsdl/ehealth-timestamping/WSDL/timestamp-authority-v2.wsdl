@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:be:fgov:ehealth:timestamping:protocol:v2" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:be:fgov:ehealth:timestamping:protocol:v2">
+  <documentation>Version 2.2 : web service definition for Timestamping authority</documentation>
+  <types>
+    <xsd:schema targetNamespace="urn:oasis:names:tc:dss:1.0:core:schema:xsd">
+      <xsd:import namespace="urn:oasis:names:tc:dss:1.0:core:schema" schemaLocation="../../external/XSD/oasis-dss-core-schema-v1.0-os.xsd"/>
+    </xsd:schema>
+  </types>
+  <message name="stamp">
+    <part element="dss:SignRequest" name="signRequest"/>
+  </message>
+  <message name="stampResponse">
+    <part element="dss:SignResponse" name="result"/>
+  </message>
+  <portType name="timestampauthorityPort">
+    <operation name="stamp">
+      <input message="tns:stamp"/>
+      <output message="tns:stampResponse"/>
+    </operation>
+  </portType>
+  <binding name="timestampauthorityPort" type="tns:timestampauthorityPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="stamp">
+      <soap:operation soapAction="urn:be:fgov:ehealth:timestamping:protocol:v2:stamp" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="TimeStampAuthority">
+    <port binding="tns:timestampauthorityPort" name="timestampauthorityPort">
+      <soap:address location="https://services.ehealth.fgov.be/TimestampAuthority/v2"/>
+    </port>
+  </service>
+</definitions>

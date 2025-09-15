@@ -4,4 +4,5 @@ dotnet-svcutil --verbosity Debug --sync --serviceContract ^
 	./ehealth-mycarenetcommons/XSD/*.xsd ./ehealth-mycarenet-memberdata/XSD/*.xsd ^
 	./external/XSD/*.xsd ./SAML/XSD/*.xsd ^
 	./ehealth-mycarenet-memberdata/WSDL/mycarenet-memberdata-proxy-v1.wsdl ^
-	./ehealth-etee/WSDL/etkdepot-proxy-v1.wsdl
+	./ehealth-etee/WSDL/etkdepot-proxy-v1.wsdl ^
+	./ehealth-timestamping/WSDL/timestamp-authority-v2.wsdl

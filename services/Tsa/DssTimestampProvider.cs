@@ -24,7 +24,7 @@ using System.Text;
 using System.Security.Cryptography.X509Certificates;
 using Egelke.EHealth.Client.Pki;
 
-namespace Egelke.EHealth.Client.Tsa
+namespace Egelke.EHealth.Client.Services.Tsa
 {
     /// <summary>
     /// Timestamp provider for TSA's that implement the DSS Timestamp profile.
@@ -65,22 +65,6 @@ namespace Egelke.EHealth.Client.Tsa
             {
                 profile = value;
             }
-        }
-
-        /// <summary>
-        /// Default constructor using default TSA client of the application configuration.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// When this constructor is used, the application configuration is searched for a TSA client with the name "Xades.TSA".
-        /// </para>
-        /// <para>
-        /// The exact configuration requirements depend on the TSA and should be obtained from them.
-        /// </para>
-        /// </remarks>
-        public DssTimestampProvider()
-        {
-            client = new TimeStampAuthorityClient();
         }
 
         /// <summary>

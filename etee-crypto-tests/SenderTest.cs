@@ -42,7 +42,7 @@ namespace etee_crypto_tests
         }
 
         [Fact]
-        public void RsaBLevel()
+        public void SendBLevelToRsaRecipient()
         {
             IDataSealer target = factory.Create(Level.B_Level, sender);
 

@@ -22,7 +22,6 @@ using Egelke.EHealth.Client.Security;
 using Egelke.EHealth.Client.Sts;
 using Egelke.EHealth.Client.Sts.Saml11;
 using Egelke.EHealth.Client.Sts.WsTrust200512;
-using Egelke.EHealth.Client.Tsa;
 using Egelke.Eid.Client;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -205,29 +204,6 @@ namespace library_core_tests
 
             pong = client.Echo("boe");
             Assert.Equal("boe", pong);
-        }
-
-        [Fact]
-        public void Tsa()
-        {
-            var p12 = new EHealthP12("files/ehealth-cin-nic.acc.p12", File.ReadAllText("files/ehealth-cin-nic.acc.p12.pwd"));
-            var client = p12["authentication"];
-
-            string msg = "Hello Bob, this is Alice";
-            byte[] msgDigest;
-            using (var sha256 = SHA256.Create()) {
-                msgDigest = sha256.ComputeHash(Encoding.UTF8.GetBytes(msg));
-            }
-
-            var binding = new EhBinding(loggerFactory.CreateLogger<CustomSecurity>());
-            var tsa = new TimeStampAuthorityClient(binding, new EndpointAddress("https://services-acpt.ehealth.fgov.be/TimestampAuthority/v2"));
-            tsa.ClientCredentials.ClientCertificate.Certificate = client;
-            tsa.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(loggerFactory.CreateLogger<LoggingMessageInspector>()));
-
-            var tsaProvider = new EHealthTimestampProvider(tsa);
-            var hash = tsaProvider.GetTimestampFromDocumentHash(msgDigest, "http://www.w3.org/2001/04/xmlenc#sha256");
-
-            Assert.NotNull(hash);
         }
     }
 

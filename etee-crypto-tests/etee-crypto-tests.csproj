@@ -25,6 +25,21 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\etee-crypto\etee-crypto.csproj" />
+		<ProjectReference Include="..\services\services.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+		<Reference Include="System.Security" />
+		<Reference Include="System.ServiceModel" />
+		<Reference Include="System.IdentityModel" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="System.ServiceModel.Http" Version="8.1.2" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="System.ServiceModel.Http" Version="6.2.0" />
 	</ItemGroup>
 
 

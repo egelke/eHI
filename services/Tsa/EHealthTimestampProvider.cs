@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using Org.BouncyCastle.Tsp;
 
-namespace Egelke.EHealth.Client.Tsa
+namespace Egelke.EHealth.Client.Services.Tsa
 {
     /// <summary>
     /// Timestamp provider for eHealth as TSA.
@@ -33,23 +33,6 @@ namespace Egelke.EHealth.Client.Tsa
     /// </remarks>
     public class EHealthTimestampProvider : DssTimestampProvider
     {
-        /// <summary>
-        /// Default constructor using default TSA client of the application configuration.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// When this constructor is used, the application configuration is searched for a TSA client with the name "Xades.TSA".
-        /// </para>
-        /// <para>
-        /// The eHealth TSA requires the StsBinding as provided by the eH-I codeplex project.
-        /// </para>
-        /// </remarks>
-        public EHealthTimestampProvider()
-            : base()
-        {
-            Profile = "urn:ehealth:profiles:timestamping:2.1-cert";
-        }
-
         /// <summary>
         /// Constructor using a provided TSA client.
         /// </summary>
