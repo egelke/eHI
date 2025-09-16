@@ -1,0 +1,46 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:core="urn:be:fgov:ehealth:commons:1_0:core" xmlns:etee="urn:be:fgov:ehealth:etee:commons:1_0:etee" xmlns:protocol="urn:be:fgov:ehealth:commons:1_0:protocol" targetNamespace="urn:be:fgov:ehealth:etee:commons:1_0:etee">
+ <xs:annotation>
+ <xs:appinfo>
+ Implementation-Title: XSD ETEE KGSS
+ Specification-Version: 1.3
+ Implementation-Version: 1.3.2
+ Build-Time: 20201221-1529 
+ </xs:appinfo>
+ </xs:annotation>
+
+  <xs:import namespace="urn:be:fgov:ehealth:commons:1_0:core" schemaLocation="../../ehealth-commons/XSD/ehealth-commons-schema-core-1_0.xsd"/>
+
+  <xs:complexType name="EteeResponseType">
+    <xs:sequence>
+      <xs:element name="Status">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Code" type="xs:string"/>
+            <xs:element name="Message" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Error" type="etee:ErrorType"/>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="ErrorType">
+    <xs:sequence>
+      <xs:element name="Code" type="xs:string"/>
+      <!-- TODO change to xs:string met attribute xml:lang -->
+      <xs:element maxOccurs="unbounded" name="Message" type="core:LocalisedString"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="ApplicationErrors">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Code" type="xs:string"/>
+        <xs:element maxOccurs="unbounded" name="Message" type="core:LocalisedString"/>
+      </xs:sequence>
+      <xs:attribute name="FaultId" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

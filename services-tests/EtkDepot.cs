@@ -83,7 +83,6 @@ namespace services_tests
             //File.WriteAllBytes("c:/Data/mycarenet-ec.etk", rsp[0].GetEncoded());
         }
 
-
         [Fact]
         public void NotFound()
         {

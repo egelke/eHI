@@ -234,126 +234,6 @@ public partial class LocalisedStringType
 /// <remarks/>
 [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
-public partial class StatusDetailType
-{
-    
-    private System.Xml.XmlElement[] anyField;
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAnyElementAttribute(Order=0)]
-    public System.Xml.XmlElement[] Any
-    {
-        get
-        {
-            return this.anyField;
-        }
-        set
-        {
-            this.anyField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
-public partial class StatusCodeType
-{
-    
-    private StatusCodeType statusCodeField;
-    
-    private string valueField;
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-    public StatusCodeType StatusCode
-    {
-        get
-        {
-            return this.statusCodeField;
-        }
-        set
-        {
-            this.statusCodeField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute(DataType="anyURI")]
-    public string Value
-    {
-        get
-        {
-            return this.valueField;
-        }
-        set
-        {
-            this.valueField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
-public partial class StatusType
-{
-    
-    private StatusCodeType statusCodeField;
-    
-    private string statusMessageField;
-    
-    private StatusDetailType statusDetailField;
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-    public StatusCodeType StatusCode
-    {
-        get
-        {
-            return this.statusCodeField;
-        }
-        set
-        {
-            this.statusCodeField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-    public string StatusMessage
-    {
-        get
-        {
-            return this.statusMessageField;
-        }
-        set
-        {
-            this.statusMessageField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-    public StatusDetailType StatusDetail
-    {
-        get
-        {
-            return this.statusDetailField;
-        }
-        set
-        {
-            this.statusDetailField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:commons:core:v3")]
 public partial class CommonOutputType
 {
@@ -630,11 +510,131 @@ public partial class base64Binary
 }
 
 /// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
+public partial class StatusDetailType
+{
+    
+    private System.Xml.XmlElement[] anyField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAnyElementAttribute(Order=0)]
+    public System.Xml.XmlElement[] Any
+    {
+        get
+        {
+            return this.anyField;
+        }
+        set
+        {
+            this.anyField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
+public partial class StatusCodeType
+{
+    
+    private StatusCodeType statusCodeField;
+    
+    private string valueField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public StatusCodeType StatusCode
+    {
+        get
+        {
+            return this.statusCodeField;
+        }
+        set
+        {
+            this.statusCodeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute(DataType="anyURI")]
+    public string Value
+    {
+        get
+        {
+            return this.valueField;
+        }
+        set
+        {
+            this.valueField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
+public partial class StatusType
+{
+    
+    private StatusCodeType statusCodeField;
+    
+    private string statusMessageField;
+    
+    private StatusDetailType statusDetailField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public StatusCodeType StatusCode
+    {
+        get
+        {
+            return this.statusCodeField;
+        }
+        set
+        {
+            this.statusCodeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string StatusMessage
+    {
+        get
+        {
+            return this.statusMessageField;
+        }
+        set
+        {
+            this.statusMessageField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public StatusDetailType StatusDetail
+    {
+        get
+        {
+            return this.statusDetailField;
+        }
+        set
+        {
+            this.statusDetailField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendResponseType))]
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendResponseMemberDataType))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(PaginationResponseType))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(StatusResponseType))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(PaginationStatusResponseType))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendResponseType))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendResponseMemberDataType))]
 [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:protocol:v2")]
@@ -688,6 +688,39 @@ public partial class ResponseType
             this.issueInstantField = value;
         }
     }
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendResponseMemberDataType))]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:commons:protocol:v3")]
+public partial class SendResponseType : ResponseType
+{
+    
+    private ResponseReturnType returnField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public ResponseReturnType Return
+    {
+        get
+        {
+            return this.returnField;
+        }
+        set
+        {
+            this.returnField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:memberdata:protocol:v1")]
+public partial class SendResponseMemberDataType : SendResponseType
+{
 }
 
 /// <remarks/>
@@ -791,135 +824,6 @@ public partial class PaginationStatusResponseType : StatusResponseType
         set
         {
             this.maxElementsField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendResponseMemberDataType))]
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:commons:protocol:v3")]
-public partial class SendResponseType : ResponseType
-{
-    
-    private ResponseReturnType returnField;
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-    public ResponseReturnType Return
-    {
-        get
-        {
-            return this.returnField;
-        }
-        set
-        {
-            this.returnField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:memberdata:protocol:v1")]
-public partial class SendResponseMemberDataType : SendResponseType
-{
-}
-
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(TypeName="IdType", Namespace="urn:be:fgov:ehealth:commons:core:v2")]
-public partial class IdType1
-{
-    
-    private string typeField;
-    
-    private string valueField;
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute(DataType="anyURI")]
-    public string Type
-    {
-        get
-        {
-            return this.typeField;
-        }
-        set
-        {
-            this.typeField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
-    public string Value
-    {
-        get
-        {
-            return this.valueField;
-        }
-        set
-        {
-            this.valueField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
-public partial class ActorType
-{
-    
-    private IdType1[] idField;
-    
-    private string[] firstNameField;
-    
-    private string nameField;
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("Id", Order=0)]
-    public IdType1[] Id
-    {
-        get
-        {
-            return this.idField;
-        }
-        set
-        {
-            this.idField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("FirstName", Order=1)]
-    public string[] FirstName
-    {
-        get
-        {
-            return this.firstNameField;
-        }
-        set
-        {
-            this.firstNameField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-    public string Name
-    {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
         }
     }
 }
@@ -1083,13 +987,13 @@ public partial class RoutingType
 public partial class PartyType
 {
     
-    private IdType physicalPersonField;
+    private IdType1 physicalPersonField;
     
-    private IdType organizationField;
+    private IdType1 organizationField;
     
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-    public IdType PhysicalPerson
+    public IdType1 PhysicalPerson
     {
         get
         {
@@ -1103,7 +1007,7 @@ public partial class PartyType
     
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-    public IdType Organization
+    public IdType1 Organization
     {
         get
         {
@@ -1119,8 +1023,8 @@ public partial class PartyType
 /// <remarks/>
 [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:commons:core:v3")]
-public partial class IdType : AbstractIdType
+[System.Xml.Serialization.XmlTypeAttribute(TypeName="IdType", Namespace="urn:be:fgov:ehealth:mycarenet:commons:core:v3")]
+public partial class IdType1 : AbstractIdType
 {
     
     private NihiiType nihiiField;
@@ -1255,7 +1159,7 @@ public partial class ValueRefString
 /// <remarks/>
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(AbstractIdType))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(PackageType))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(IdType))]
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(IdType1))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(NihiiType))]
 [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -1298,7 +1202,7 @@ public abstract partial class SelfRefType
 
 /// <remarks/>
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(PackageType))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(IdType))]
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(IdType1))]
 [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:commons:core:v3")]
@@ -1395,9 +1299,9 @@ public partial class CareProviderType
     
     private NihiiType nihiiField;
     
-    private IdType physicalPersonField;
+    private IdType1 physicalPersonField;
     
-    private IdType organizationField;
+    private IdType1 organizationField;
     
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute(Order=0)]
@@ -1415,7 +1319,7 @@ public partial class CareProviderType
     
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-    public IdType PhysicalPerson
+    public IdType1 PhysicalPerson
     {
         get
         {
@@ -1429,7 +1333,7 @@ public partial class CareProviderType
     
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-    public IdType Organization
+    public IdType1 Organization
     {
         get
         {
@@ -1611,11 +1515,107 @@ public partial class CommonInputType
 }
 
 /// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
+public partial class IdType
+{
+    
+    private string typeField;
+    
+    private string valueField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute(DataType="anyURI")]
+    public string Type
+    {
+        get
+        {
+            return this.typeField;
+        }
+        set
+        {
+            this.typeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTextAttribute()]
+    public string Value
+    {
+        get
+        {
+            return this.valueField;
+        }
+        set
+        {
+            this.valueField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:core:v2")]
+public partial class ActorType
+{
+    
+    private IdType[] idField;
+    
+    private string[] firstNameField;
+    
+    private string nameField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("Id", Order=0)]
+    public IdType[] Id
+    {
+        get
+        {
+            return this.idField;
+        }
+        set
+        {
+            this.idField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("FirstName", Order=1)]
+    public string[] FirstName
+    {
+        get
+        {
+            return this.firstNameField;
+        }
+        set
+        {
+            this.firstNameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public string Name
+    {
+        get
+        {
+            return this.nameField;
+        }
+        set
+        {
+            this.nameField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendRequestType))]
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendRequestMemberDataType))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(PaginationRequestType))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(AuthorRequestType))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(AuthorPaginationRequestType))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendRequestType))]
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendRequestMemberDataType))]
 [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:commons:protocol:v2")]
@@ -1653,6 +1653,87 @@ public partial class RequestType
             this.issueInstantField = value;
         }
     }
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendRequestMemberDataType))]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:commons:protocol:v3")]
+public partial class SendRequestType : RequestType
+{
+    
+    private CommonInputType commonInputField;
+    
+    private RoutingType routingField;
+    
+    private BlobType detailField;
+    
+    private base64Binary xadesField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public CommonInputType CommonInput
+    {
+        get
+        {
+            return this.commonInputField;
+        }
+        set
+        {
+            this.commonInputField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public RoutingType Routing
+    {
+        get
+        {
+            return this.routingField;
+        }
+        set
+        {
+            this.routingField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public BlobType Detail
+    {
+        get
+        {
+            return this.detailField;
+        }
+        set
+        {
+            this.detailField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+    public base64Binary Xades
+    {
+        get
+        {
+            return this.xadesField;
+        }
+        set
+        {
+            this.xadesField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:memberdata:protocol:v1")]
+public partial class SendRequestMemberDataType : SendRequestType
+{
 }
 
 /// <remarks/>
@@ -1759,87 +1840,6 @@ public partial class AuthorPaginationRequestType : AuthorRequestType
             this.maxElementsField = value;
         }
     }
-}
-
-/// <remarks/>
-[System.Xml.Serialization.XmlIncludeAttribute(typeof(SendRequestMemberDataType))]
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:commons:protocol:v3")]
-public partial class SendRequestType : RequestType
-{
-    
-    private CommonInputType commonInputField;
-    
-    private RoutingType routingField;
-    
-    private BlobType detailField;
-    
-    private base64Binary xadesField;
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-    public CommonInputType CommonInput
-    {
-        get
-        {
-            return this.commonInputField;
-        }
-        set
-        {
-            this.commonInputField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-    public RoutingType Routing
-    {
-        get
-        {
-            return this.routingField;
-        }
-        set
-        {
-            this.routingField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-    public BlobType Detail
-    {
-        get
-        {
-            return this.detailField;
-        }
-        set
-        {
-            this.detailField = value;
-        }
-    }
-    
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-    public base64Binary Xades
-    {
-        get
-        {
-            return this.xadesField;
-        }
-        set
-        {
-            this.xadesField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:mycarenet:memberdata:protocol:v1")]
-public partial class SendRequestMemberDataType : SendRequestType
-{
 }
 
 /// <remarks/>
@@ -2320,6 +2320,374 @@ public partial class GetEtkResponse1
     public GetEtkResponse1(GetEtkResponse GetEtkResponse)
     {
         this.GetEtkResponse = GetEtkResponse;
+    }
+}
+
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.ServiceModel.ServiceContractAttribute(Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol", ConfigurationName="KgssPortType")]
+public interface KgssPortType
+{
+    
+    // CODEGEN: Generating message contract since the operation GetNewKey is neither RPC nor document wrapped.
+    [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+    [System.ServiceModel.FaultContractAttribute(typeof(SystemErrorType), Action="", Name="SystemError", Namespace="urn:be:fgov:ehealth:errors:soa:v1")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ErrorType))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ResponseType))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SelfRefType))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RequestType))]
+    GetNewKeyResponse1 GetNewKey(GetNewKeyRequest1 request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+    System.Threading.Tasks.Task<GetNewKeyResponse1> GetNewKeyAsync(GetNewKeyRequest1 request);
+    
+    // CODEGEN: Generating message contract since the operation GetKey is neither RPC nor document wrapped.
+    [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+    [System.ServiceModel.FaultContractAttribute(typeof(SystemErrorType), Action="", Name="SystemError", Namespace="urn:be:fgov:ehealth:errors:soa:v1")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ErrorType))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ResponseType))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SelfRefType))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RequestType))]
+    GetKeyResponse1 GetKey(GetKeyRequest1 request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+    System.Threading.Tasks.Task<GetKeyResponse1> GetKeyAsync(GetKeyRequest1 request);
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol")]
+public partial class GetNewKeyRequest : RequestType2
+{
+    
+    private SealedContentType sealedNewKeyRequestField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public SealedContentType SealedNewKeyRequest
+    {
+        get
+        {
+            return this.sealedNewKeyRequestField;
+        }
+        set
+        {
+            this.sealedNewKeyRequestField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol")]
+public partial class SealedContentType
+{
+    
+    private byte[] sealedContentField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", Order=0)]
+    public byte[] SealedContent
+    {
+        get
+        {
+            return this.sealedContentField;
+        }
+        set
+        {
+            this.sealedContentField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol")]
+public partial class GetNewKeyResponse : EteeResponseType
+{
+    
+    private SealedContentType sealedNewKeyResponseField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public SealedContentType SealedNewKeyResponse
+    {
+        get
+        {
+            return this.sealedNewKeyResponseField;
+        }
+        set
+        {
+            this.sealedNewKeyResponseField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:be:fgov:ehealth:etee:commons:1_0:etee")]
+public partial class EteeResponseType
+{
+    
+    private EteeResponseTypeStatus statusField;
+    
+    private ErrorType2[] errorField;
+    
+    private string idField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+    public EteeResponseTypeStatus Status
+    {
+        get
+        {
+            return this.statusField;
+        }
+        set
+        {
+            this.statusField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("Error", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+    public ErrorType2[] Error
+    {
+        get
+        {
+            return this.errorField;
+        }
+        set
+        {
+            this.errorField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string Id
+    {
+        get
+        {
+            return this.idField;
+        }
+        set
+        {
+            this.idField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:be:fgov:ehealth:etee:commons:1_0:etee")]
+public partial class EteeResponseTypeStatus
+{
+    
+    private string codeField;
+    
+    private string messageField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+    public string Code
+    {
+        get
+        {
+            return this.codeField;
+        }
+        set
+        {
+            this.codeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+    public string Message
+    {
+        get
+        {
+            return this.messageField;
+        }
+        set
+        {
+            this.messageField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(TypeName="ErrorType", Namespace="urn:be:fgov:ehealth:etee:commons:1_0:etee")]
+public partial class ErrorType2
+{
+    
+    private string codeField;
+    
+    private LocalisedString[] messageField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+    public string Code
+    {
+        get
+        {
+            return this.codeField;
+        }
+        set
+        {
+            this.codeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("Message", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+    public LocalisedString[] Message
+    {
+        get
+        {
+            return this.messageField;
+        }
+        set
+        {
+            this.messageField = value;
+        }
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+public partial class GetNewKeyRequest1
+{
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol", Order=0)]
+    public GetNewKeyRequest GetNewKeyRequest;
+    
+    public GetNewKeyRequest1()
+    {
+    }
+    
+    public GetNewKeyRequest1(GetNewKeyRequest GetNewKeyRequest)
+    {
+        this.GetNewKeyRequest = GetNewKeyRequest;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+public partial class GetNewKeyResponse1
+{
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol", Order=0)]
+    public GetNewKeyResponse GetNewKeyResponse;
+    
+    public GetNewKeyResponse1()
+    {
+    }
+    
+    public GetNewKeyResponse1(GetNewKeyResponse GetNewKeyResponse)
+    {
+        this.GetNewKeyResponse = GetNewKeyResponse;
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol")]
+public partial class GetKeyRequest : RequestType2
+{
+    
+    private SealedContentType sealedKeyRequestField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public SealedContentType SealedKeyRequest
+    {
+        get
+        {
+            return this.sealedKeyRequestField;
+        }
+        set
+        {
+            this.sealedKeyRequestField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol")]
+public partial class GetKeyResponse : EteeResponseType
+{
+    
+    private SealedContentType sealedKeyResponseField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public SealedContentType SealedKeyResponse
+    {
+        get
+        {
+            return this.sealedKeyResponseField;
+        }
+        set
+        {
+            this.sealedKeyResponseField = value;
+        }
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+public partial class GetKeyRequest1
+{
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol", Order=0)]
+    public GetKeyRequest GetKeyRequest;
+    
+    public GetKeyRequest1()
+    {
+    }
+    
+    public GetKeyRequest1(GetKeyRequest GetKeyRequest)
+    {
+        this.GetKeyRequest = GetKeyRequest;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+public partial class GetKeyResponse1
+{
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:be:fgov:ehealth:etee:kgss:1_0:protocol", Order=0)]
+    public GetKeyResponse GetKeyResponse;
+    
+    public GetKeyResponse1()
+    {
+    }
+    
+    public GetKeyResponse1(GetKeyResponse GetKeyResponse)
+    {
+        this.GetKeyResponse = GetKeyResponse;
     }
 }
 

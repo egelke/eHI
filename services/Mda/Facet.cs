@@ -8,7 +8,7 @@ namespace Egelke.EHealth.Client.Services.Mda
 {
     public class Facet
     {
-        internal static XNamespace EXT_NS = "urn:be:cin:nippin:memberdata:saml:extension";
+        internal static readonly XNamespace EXT_NS = "urn:be:cin:nippin:memberdata:saml:extension";
 
         public static string ID_INSURABILITY = "urn:be:cin:nippin:insurability";
 

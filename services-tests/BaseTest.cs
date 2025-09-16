@@ -38,7 +38,7 @@ namespace services_tests
 
             store = new EHealthP12("files/SSIN=79021802145 20250514-082150.acc.p12", File.ReadAllText("files/SSIN=79021802145 20250514-082150.acc.p12.pwd"));
             idCert = store["authentication"];
-            sessionCert = null;
+            sessionCert = null; //use the same as the id cert.
 
             Match match = Regex.Match(idCert.Subject, @"(SSIN|SERIALNUMBER)=(\d{11})");
             Assert.True(match.Success, "need an ssin in the cert subject (is an eID available?)");

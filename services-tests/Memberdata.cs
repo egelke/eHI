@@ -59,7 +59,7 @@ namespace services_tests
                 },
                 CareProvider = new CareProviderType()
                 {
-                    PhysicalPerson = new IdType() //Depending on the list of wsdls this is either IdType or IdType1 (whatever comes first while generating)
+                    PhysicalPerson = new IdType1() //Depending on the list of wsdls this is either IdType or IdType1 (whatever comes first while generating)
                     {
                         Ssin = new ValueRefString()
                         {
@@ -121,7 +121,7 @@ namespace services_tests
                 },
                 CareProvider = new CareProviderType()
                 {
-                    PhysicalPerson = new IdType() //Depending on the list of wsdls this is either IdType or IdType1 (whatever comes first while generating)
+                    PhysicalPerson = new IdType1() //Depending on the list of wsdls this is either IdType or IdType1 (whatever comes first while generating)
                     {
                         Ssin = new ValueRefString()
                         {

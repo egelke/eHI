@@ -17,6 +17,8 @@
  */
 
 using System;
+using System.Linq;
+using System.Numerics;
 using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Egelke.EHealth.Etee.Crypto
@@ -119,6 +121,36 @@ namespace Egelke.EHealth.Etee.Crypto
             }
         }
 
+        /// <summary>
+        /// Check based on the id, but validates the key.
+        /// </summary>
+        /// <param name="obj">the object to compare with</param>
+        /// <exception cref="InvalidOperationException">When the keys differs with same Id</exception>
+        /// <returns>true if equal</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is SecretKey that)
+            {
+                bool result = this.id.SequenceEqual(that.id);
+                if (result && !this.key.SequenceEqual(that.key))
+                    throw new InvalidOperationException("Key values do not match while ids match");
+                return result;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the hash code on the Id's value.
+        /// </summary>
+        /// <returns>Non-secure hash of the Id</returns>
+        public override int GetHashCode()
+        {
+           return id.Aggregate(17, (current, b) => current * 31 + b);
+        }
+
         internal KeyParameter BCKey
         {
             get
@@ -127,5 +159,6 @@ namespace Egelke.EHealth.Etee.Crypto
             }
         }
 
+        
     }
 }

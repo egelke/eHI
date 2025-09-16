@@ -79,7 +79,7 @@ namespace Egelke.EHealth.Client.Services.EtkDepot
             }
 
             return rsp.Items
-                .OfType<byte[]>()
+                .Cast<byte[]>()
                 .Select(i => new EncryptionToken(i))
                 .ToArray();
         }
