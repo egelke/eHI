@@ -12,14 +12,8 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
-        <be.fgov.ehealth.etee.version>2.3.0</be.fgov.ehealth.etee.version>
         <ch.qos.logback.version>1.2.13</ch.qos.logback.version>
 
-		<!--
-        <spring.boot.version>2.5.2</spring.boot.version>
-        <org.apache.cxf.version>3.4.4</org.apache.cxf.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		-->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
@@ -47,6 +41,7 @@
     </dependencies>
 
     <build>
+        <finalName>etee-${be.fgov.ehealth.etee.version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
@@ -91,4 +86,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>etee-2.3.0</id>
+            <properties>
+                <be.fgov.ehealth.etee.version>2.3.0</be.fgov.ehealth.etee.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>etee-2.2.0</id>
+            <properties>
+                <be.fgov.ehealth.etee.version>2.2.0</be.fgov.ehealth.etee.version>
+            </properties>
+        </profile>
+    </profiles>
 </project>
