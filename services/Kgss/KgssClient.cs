@@ -72,12 +72,7 @@ namespace Egelke.EHealth.Client.Services.Kgss
 
         public SecretKey GetNewKey(params CredentialType[] allowed)
         {
-            return GetNewKey(allowed, null);
-        }
-
-        public SecretKey GetNewKey(CredentialType[] allowed, CredentialType[] excluded)
-        {
-            var reqContent = CreateGetNewKeyRequestContent(allowed, excluded);
+            var reqContent = CreateGetNewKeyRequestContent(allowed);
             var req = new GetNewKeyRequest1()
             {
                 GetNewKeyRequest = new GetNewKeyRequest()
@@ -89,7 +84,7 @@ namespace Egelke.EHealth.Client.Services.Kgss
                 }
             };
 
-            _logger.LogInformation("Requesting New Key from KGSS, for {0} allowed and {1} excluded", allowed?.Length, excluded?.Length);
+            _logger.LogInformation("Requesting New Key from KGSS, for {0} allowed", allowed?.Length);
             var rsp = Channel.GetNewKey(req)?.GetNewKeyResponse;
             if (rsp?.Status?.Code != "200")
             {
@@ -163,12 +158,11 @@ namespace Egelke.EHealth.Client.Services.Kgss
             return new SecretKey(id, key);
         }
 
-        protected XmlElement CreateGetNewKeyRequestContent(CredentialType[] allowed, CredentialType[] excluded)
+        protected XmlElement CreateGetNewKeyRequestContent(CredentialType[] allowed)
         {
             var doc = new XDocument(
                 new XElement(NS_KGSS + "GetNewKeyRequestContent",
                     allowed.Select(c => c.ToXElement(CredentialType.ROOTNAME_ALLOWED)),
-                    excluded?.Select(c => c.ToXElement(CredentialType.ROOTNAME_EXCLUDED)),
                     new XElement(NS_KGSS + "ETK", Etk.GetEncodedAsString())
                     )
                 );
