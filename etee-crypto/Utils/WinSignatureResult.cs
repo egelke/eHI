@@ -96,11 +96,11 @@ namespace Egelke.EHealth.Etee.Crypto.Utils
             int halfLength = input.Length / 2;
 
             MemoryStream encoded = new MemoryStream();
-            DerSequenceGenerator generator = new DerSequenceGenerator(encoded);
-            generator.AddObject(Ieee1363KeyParameterIntegerToDer(input, 0, halfLength)); //add r
-            generator.AddObject(Ieee1363KeyParameterIntegerToDer(input, halfLength, halfLength)); //add s
-            //generator.Close();
-
+            using (DerSequenceGenerator generator = new DerSequenceGenerator(encoded))
+            {
+                generator.AddObject(Ieee1363KeyParameterIntegerToDer(input, 0, halfLength)); //add r
+                generator.AddObject(Ieee1363KeyParameterIntegerToDer(input, halfLength, halfLength)); //add s
+            }
             return encoded.ToArray();
         }
 
