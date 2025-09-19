@@ -212,6 +212,13 @@ namespace Egelke.EHealth.Client.Services.Mda
             if (result.SecurityInformation.TrustStatus == TrustStatus.None)
                 throw new SecurityException("Clear text untrused");
 
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                String msg = new StreamReader(result.UnsealedData).ReadToEnd();
+                _logger.LogDebug("encrypted content: {0}", msg);
+                result.UnsealedData.Position = 0;
+            }
+
             var encDoc = new XmlDocument();
             encDoc.PreserveWhitespace = true;
             encDoc.Load(result.UnsealedData);
