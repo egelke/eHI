@@ -11,16 +11,12 @@ using System.ServiceModel.Description;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using Egelke.EHealth.Client.Pki;
-using Egelke.EHealth.Etee.Crypto;
-using Egelke.EHealth.Etee.Crypto.Receiver;
-using Egelke.EHealth.Etee.Crypto.Status;
 using Microsoft.Extensions.Logging;
 
 namespace Egelke.EHealth.Client.Services.Mda
 {
 
-    public class McnMdaClient : ClientBase<MycarenetMemberDataPortType>, IMda
+    public class McnMdaClient : GenSyncClient<MycarenetMemberDataPortType>, IMda
     {
         private const string SAML2P_NS = "urn:oasis:names:tc:SAML:2.0:protocol";
 
@@ -28,25 +24,10 @@ namespace Egelke.EHealth.Client.Services.Mda
 
         private const string CIN_TYPES_NS = "urn:be:cin:types:v1";
 
-        private const string CIN_ENC_NS = "urn:be:cin:encrypted";
-
-        private readonly ILogger<McnMdaClient> _logger;
-
-        public LicenseType License { get; set; }
-
-        public CareProviderType CareProvider { get; set; }
-
-        public bool IsTest { get; set; } = true;
-
-        public EncryptionToken Etk {  get; set; }
-
-        public List<EHealthP12> DecryptionKeys { get; set; } = new List<EHealthP12>();
 
         public McnMdaClient(Binding binding, EndpointAddress remoteAddress, ILogger<McnMdaClient> logger = null) 
-            : base(binding, remoteAddress)
-        {
-            _logger = logger;
-        }
+            : base(binding, remoteAddress, logger)
+        { }
 
         public XmlElement CreateQuery(string ssin, DateTime start, DateTime end, params Facet[] facets)
         {
@@ -88,15 +69,10 @@ namespace Egelke.EHealth.Client.Services.Mda
                     )
                 );
 
-            var xmlDoc = new XmlDocument();
-            using (var reader = reqBody.CreateReader())
-            {
-                xmlDoc.Load(reader);
-            }
-            return xmlDoc.DocumentElement;
+            return ToXmlElement(reqBody);
         }
 
-        public IEnumerable<XmlElement> Consult(XmlElement query)
+        public IEnumerable<XmlElement> Consult(XmlElement query, bool etee = false)
         {
             XmlNamespaceManager reqMngr = new XmlNamespaceManager(query.OwnerDocument.NameTable);
             reqMngr.AddNamespace("saml2p", SAML2P_NS);
@@ -104,130 +80,36 @@ namespace Egelke.EHealth.Client.Services.Mda
 
             string reqId = query.SelectSingleNode("/saml2p:AttributeQuery/@ID", reqMngr)?.Value?.Substring(1);
 
-            var reqBodyStream = new MemoryStream();
-            var settings = new XmlWriterSettings
-            {
-                Encoding = new UTF8Encoding(false), // Disable BOM
-                Indent = true,                      // Optional: pretty print
-                OmitXmlDeclaration = false,         // Include XML declaration
-                IndentChars = "  ",
-                NewLineHandling = NewLineHandling.Replace
-            };
-            using (var writer = XmlWriter.Create(reqBodyStream, settings))
-            {
-                query.WriteTo(writer);
-            }
-
-            var req = new SendRequestMemberDataType()
-            {
-                Id = "_" + Guid.NewGuid().ToString(),
-                CommonInput = new CommonInputType()
-                {
-                    InputReference = reqId,
-                    Request = new RequestType1()
-                    {
-                        IsTest = true,
-                    },
-                    Origin = new OriginType()
-                    {
-                        Package = new PackageType()
-                        {
-                            License = License
-                        },
-                        CareProvider = CareProvider
-                    }
-                },
-                Detail = new BlobType()
-                {
-                    ContentType = "text/xml",
-                    ContentEncoding = "none",
-                    Value = reqBodyStream.ToArray(),
-                    Etk = Etk?.GetEncoded()
-                }
-            };
-
+            var req = CreateRequest<SendRequestMemberDataType>(reqId, query, etee);
             _logger?.LogInformation("Calling MyCareNet MDA, ref={0}", req.CommonInput.InputReference);
             _logger?.LogDebug("Calling MyCareNet MDA {0} with query: {1}", req.CommonInput.InputReference, query.OuterXml);
 
-            ResponseReturnType rsp = Channel.memberDataConsultation(
+            ResponseReturnType rtn = Channel.memberDataConsultation(
                     new memberDataConsultationRequest() {  MemberDataConsultationRequest = req }
                 )?.MemberDataConsultationResponse?.Return;
-            
-            _logger?.LogInformation("Received response for {0} with out-ref {1} and nip-ref {2}",
-                req.CommonInput.InputReference,
-                rsp?.CommonOutput?.OutputReference,
-                rsp?.CommonOutput?.NIPReference);
 
-            byte[] rspBody;
-            switch(rsp?.Detail?.ContentEncryption)
-            {
-                case null:
-                    rspBody = rsp?.Detail?.Value;
-                    break;
-                case "encryptedForKnownRecipient":
-                    rspBody = DecryptForKnown(rsp?.Detail?.Value);
-                    break;
-                default:
-                    throw new NotImplementedException("encryption is not yet supported");
-            }
+            XmlElement rsp = HandleReturn<XmlElement>( rtn );
 
-            _logger?.LogDebug("Recieved respronse for {0}: {1}",
-                req.CommonInput.InputReference,
-                Encoding.UTF8.GetString(rspBody));
-
-            var rspDoc = new XmlDocument();
-            rspDoc.PreserveWhitespace = true;
-            rspDoc.Load(new MemoryStream(rspBody));
-
-            XmlNamespaceManager rspMngr = new XmlNamespaceManager(rspDoc.NameTable);
+            XmlNamespaceManager rspMngr = new XmlNamespaceManager(rsp.OwnerDocument.NameTable);
             rspMngr.AddNamespace("saml2p", SAML2P_NS);
             rspMngr.AddNamespace("saml2", SAML2_NS);
             rspMngr.AddNamespace("t", CIN_TYPES_NS);
             
 
-            string statusCode = rspDoc.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusCode/@Value", rspMngr)?.Value;
+            string statusCode = rsp.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusCode/@Value", rspMngr)?.Value;
             if (statusCode != "urn:oasis:names:tc:SAML:2.0:status:Success")
             {
-                string statusMessage = rspDoc.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusMessage", rspMngr)?.InnerText;
+                string statusMessage = rsp.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusMessage", rspMngr)?.InnerText;
 
-                string faultCode = rspDoc.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusDetail/Fault/t:FaultCode", rspMngr)?.InnerText;
-                string faultMessage = rspDoc.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusDetail/Fault/t:Message", rspMngr)?.InnerText;
+                string faultCode = rsp.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusDetail/Fault/t:FaultCode", rspMngr)?.InnerText;
+                string faultMessage = rsp.SelectSingleNode("/saml2p:Response/saml2p:Status/saml2p:StatusDetail/Fault/t:Message", rspMngr)?.InnerText;
 
                 throw new ServiceException(faultCode ?? statusCode, faultMessage ?? statusMessage);
             }
 
-            return rspDoc.SelectNodes("/saml2p:Response/saml2:Assertion", rspMngr).Cast<XmlElement>();
+            return rsp.SelectNodes("/saml2p:Response/saml2:Assertion", rspMngr).Cast<XmlElement>();
         }
 
-        private byte[] DecryptForKnown(byte[] cypherText)
-        {
-            var receiverFactory = new DataUnsealerFactory();
-            var receiver = receiverFactory.Create(Level.B_Level, DecryptionKeys.ToArray());
-
-            Stream cypherStream = new MemoryStream(cypherText);
-            UnsealResult result = receiver.Unseal(cypherStream);
-
-            if (result.SecurityInformation.ValidationStatus != ValidationStatus.Valid)
-                throw new SecurityException("Clear text not valid");
-            if (result.SecurityInformation.TrustStatus == TrustStatus.None)
-                throw new SecurityException("Clear text untrused");
-
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                String msg = new StreamReader(result.UnsealedData).ReadToEnd();
-                _logger.LogDebug("encrypted content: {0}", msg);
-                result.UnsealedData.Position = 0;
-            }
-
-            var encDoc = new XmlDocument();
-            encDoc.PreserveWhitespace = true;
-            encDoc.Load(result.UnsealedData);
-
-            XmlNamespaceManager encMngr = new XmlNamespaceManager(encDoc.NameTable);
-            encMngr.AddNamespace("e", CIN_ENC_NS);
-
-            string businessContentStr = encDoc.SelectSingleNode("/e:EncryptedKnownContent/e:BusinessContent", encMngr)?.InnerText;
-            return Convert.FromBase64String(businessContentStr);
-        }
+        
     }
 }

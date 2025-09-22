@@ -14,6 +14,7 @@ using Egelke.EHealth.Client;
 using Egelke.EHealth.Client.Helper;
 using Egelke.EHealth.Client.Pki;
 using Egelke.EHealth.Client.Pki.ECDSA;
+using Egelke.EHealth.Client.Services;
 using Egelke.EHealth.Client.Services.Mda;
 using Egelke.EHealth.Client.Sts;
 using Egelke.EHealth.Etee.Crypto;
@@ -22,13 +23,13 @@ using Xunit;
 
 namespace services_tests
 {
-    public class Memberdata : BaseTest
+    public class MemberdataTest : BaseTest
     {
         private EndpointAddress mdaEp;
 
         private string nihii11;
 
-        public Memberdata()
+        public MemberdataTest()
         {
             mdaEp = new EndpointAddress("https://services-acpt.ehealth.fgov.be/MyCareNet/MemberData/v1");
 
@@ -137,10 +138,13 @@ namespace services_tests
                         }
                     }
                 },
-                Etk = new EncryptionToken(File.ReadAllBytes("files/79021802145.etk")),
-                DecryptionKeys = new List<EHealthP12>()
+                Decryption = new EteeConfig()
                 {
-                    store
+                    Etk = new EncryptionToken(File.ReadAllBytes("files/79021802145.etk")),
+                    Keys = new List<EHealthP12>()
+                    {
+                        store
+                    }
                 }
             };
             mcnMda.ClientCredentials.ClientCertificate.Certificate = idCert;

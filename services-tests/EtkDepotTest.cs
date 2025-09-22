@@ -14,12 +14,12 @@ using Xunit;
 
 namespace services_tests
 {
-    public class EtkDepot : BaseTest
+    public class EtkDepotTest : BaseTest
     {
 
         private EtkDepotClient target;
 
-        public EtkDepot()
+        public EtkDepotTest()
         {
             var etkDepot = new EndpointAddress("https://services-acpt.ehealth.fgov.be/EtkDepot/v1");
 

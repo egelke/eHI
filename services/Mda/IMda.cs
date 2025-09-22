@@ -9,6 +9,6 @@ namespace Egelke.EHealth.Client.Services.Mda
     {
         XmlElement CreateQuery(string ssin, DateTime start, DateTime end, params Facet[] facets);
 
-        IEnumerable<XmlElement> Consult(XmlElement query);
+        IEnumerable<XmlElement> Consult(XmlElement query, bool etee = false);
     }
 }
