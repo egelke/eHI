@@ -7,15 +7,15 @@ using System.Security;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using Egelke.EHealth.Client.Pki;
 using Egelke.EHealth.Etee.Crypto;
 using Egelke.EHealth.Etee.Crypto.Receiver;
+using Egelke.EHealth.Etee.Crypto.Sender;
 using Egelke.EHealth.Etee.Crypto.Status;
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Ocsp;
 
 namespace Egelke.EHealth.Client.Services
 {
@@ -57,9 +57,9 @@ namespace Egelke.EHealth.Client.Services
             return xmlDoc;
         }
 
-        protected SendRequest CreateRequest<SendRequest>(String inputRef, XmlElement reqEl, bool encrypt = false) where SendRequest : SendRequestType, new()
+        protected byte[] ToByteArray(XmlElement el)
         {
-            var reqBodyStream = new MemoryStream();
+            var stream = new MemoryStream();
             var settings = new XmlWriterSettings
             {
                 Encoding = new UTF8Encoding(false), // Disable BOM
@@ -68,17 +68,38 @@ namespace Egelke.EHealth.Client.Services
                 IndentChars = "  ",
                 NewLineHandling = NewLineHandling.Replace
             };
-            using (var writer = XmlWriter.Create(reqBodyStream, settings))
+            using (var writer = XmlWriter.Create(stream, settings))
             {
-                reqEl.WriteTo(writer);
-                
+                el.WriteTo(writer);
+
             }
 
-            return CreateRequest<SendRequest>(inputRef, "text/xml", reqBodyStream.ToArray());
+            return stream.ToArray();
         }
 
-        protected SendRequest CreateRequest<SendRequest>(String inputRef, String contentType, byte[] value, bool encrypt = false) where SendRequest : SendRequestType, new()
+        protected SendRequest CreateRequest<SendRequest>(String inputRef, XmlElement value, bool etee = false) where SendRequest : SendRequestType, new()
         {
+            return CreateRequest<SendRequest>(inputRef, "text/xml", ToByteArray(value), etee);
+        }
+
+        protected SendRequest CreateRequest<SendRequest>(String inputRef, String contentType, byte[] value, bool etee = false) where SendRequest : SendRequestType, new()
+        {
+            byte[] blobValue;
+            string blobContentType;
+            string contentEncryption;
+            if (etee)
+            {
+                blobValue = EncryptForKnown(inputRef, value, contentType);
+                blobContentType = "text/plain";
+                contentEncryption = "encryptedForKnownBED";
+            } 
+            else
+            {
+                blobValue = value;
+                blobContentType = contentType;
+                contentEncryption = null;
+            }
+
             var req = new SendRequest()
             {
                 Id = "_" + Guid.NewGuid().ToString(),
@@ -100,10 +121,12 @@ namespace Egelke.EHealth.Client.Services
                 },
                 Detail = new BlobType()
                 {
-                    ContentType = contentType,
-                    ContentEncoding = "none",
-                    Value = value,
+                    ContentType = blobContentType,
+                    ContentEncoding = "none", //todo::support encodings
+                    Value = blobValue,
+                    ContentEncryption = contentEncryption    
                 }
+                //todo::support xades-t
             };
 
             return req;
@@ -150,7 +173,49 @@ namespace Egelke.EHealth.Client.Services
             }
         }
 
-        private byte[] DecryptForKnown(byte[] cypherText, out string contentType)
+        protected byte[] EncryptForKnown(String inputRef, byte[] clearText, string contentType)
+        {
+
+
+            XNamespace ns_e = "urn:be:cin:encrypted";
+            var ekc = new XDocument(
+                    new XElement(ns_e + "EncryptedKnownContent",
+                        new XElement(ns_e + "BusinessContent",
+                            new XAttribute("id", inputRef),
+                            new XAttribute("ContentType", contentType),
+                            new XAttribute("ContentEncoding", "none"),
+                            Convert.ToBase64String(clearText)
+                        )
+                        //todo::support xades
+                    )
+            );
+            //injectreply to etk as the first element if needed.
+            if (Decryption?.Etk != null) {
+                ekc.Root.AddFirst(
+                    new XElement(ns_e + "Reply-to-Etk",
+                            Decryption.Etk.GetEncodedAsString()
+                        )
+                );
+            }
+            byte[] ekcBytes = ToByteArray(ToXmlElement(ekc));
+
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug("encrypted content: {0}", Encoding.UTF8.GetString(ekcBytes));
+            }
+
+            var senderFactory = new EhDataSealerFactory();
+            var sender = senderFactory.Create(Level.B_Level, Encryption.Keys.FirstOrDefault());
+
+            Stream ekcStream = new MemoryStream(ekcBytes);
+            Stream ekcEncStream = sender.Seal(ekcStream, Encryption.Etk);
+
+            byte[] ekcEncBytes = new BinaryReader(ekcEncStream).ReadBytes((int)ekcEncStream.Length);
+
+            return ekcEncBytes;
+        }
+
+        protected byte[] DecryptForKnown(byte[] cypherText, out string contentType)
         {
             var receiverFactory = new DataUnsealerFactory();
             var receiver = receiverFactory.Create(Level.B_Level, Decryption.Keys.ToArray());
@@ -166,7 +231,7 @@ namespace Egelke.EHealth.Client.Services
             if (_logger.IsEnabled(LogLevel.Debug))
             {
                 String msg = new StreamReader(result.UnsealedData).ReadToEnd();
-                _logger.LogDebug("encrypted content: {0}", msg);
+                _logger.LogDebug("decrypted content: {0}", msg);
                 result.UnsealedData.Position = 0;
             }
 
