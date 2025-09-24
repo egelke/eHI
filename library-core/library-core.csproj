@@ -5,7 +5,7 @@
 		<RootNamespace>Egelke.EHealth.Client</RootNamespace>
 		<AssemblyName>Egelke.EHealth.Client</AssemblyName>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>3.0.0-RC1</Version>
+		<Version>3.0.0-RC2</Version>
 		<Authors>Egelke BV</Authors>
 		<Company>Egelke BV</Company>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -14,8 +14,8 @@
 		<RepositoryUrl>https://github.com/egelke/eHI</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>eHealth STS SSO SAML</PackageTags>
-		<AssemblyVersion>3.0.0.0</AssemblyVersion>
-		<FileVersion>3.0.0.0</FileVersion>
+		<AssemblyVersion>3.0.0.2</AssemblyVersion>
+		<FileVersion>3.0.0.2</FileVersion>
 		<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
 		<PackageReleaseNotes>Complete modernization</PackageReleaseNotes>
 		<Product>eHealth-Interoperability</Product>
