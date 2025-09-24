@@ -6,28 +6,21 @@ using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Threading.Tasks;
+using Egelke.EHealth.Client.Pki;
 using Egelke.EHealth.Etee.Crypto;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.Pkcs;
 
 namespace Egelke.EHealth.Client.Services.EtkDepot
 {
-    public class EtkDepotClient : ClientBase<EtkDepotPortType>
+    public class EtkDepotClient : ServiceClient<EtkDepotPortType>
     {
-
-        private readonly ILogger<EtkDepotClient> _logger;
 
 
         public EtkDepotClient(EndpointAddress remoteAddress, ILogger<EtkDepotClient> logger = null)
-            : base(new BasicHttpsBinding(), remoteAddress)
+            : base(new BasicHttpsBinding(), remoteAddress, logger)
         {
-            _logger = logger;
-        }
 
-        public EtkDepotClient(Binding binding, EndpointAddress remoteAddress, ILogger<EtkDepotClient> logger = null)
-            : base(binding, remoteAddress)
-        {
-            _logger = logger;
         }
 
         public EncryptionToken[] GetEtk(params IdentifierType[] searchCriteria)

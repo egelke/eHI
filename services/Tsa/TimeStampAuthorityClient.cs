@@ -6,25 +6,24 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
+using Egelke.EHealth.Client.Pki;
 using Microsoft.Extensions.Logging;
 
 namespace Egelke.EHealth.Client.Services.Tsa
 {
-    public class TimeStampAuthorityClient : ClientBase<timestampauthorityPort>
+    public class TimeStampAuthorityClient : ServiceClient<timestampauthorityPort>
     {
-        private readonly ILogger<TimeStampAuthorityClient> _logger;
 
-        public TimeStampAuthorityClient(EndpointAddress remoteAddress, ILogger<TimeStampAuthorityClient> logger = null)
-            : base(new EhBinding(), remoteAddress)
+
+        public TimeStampAuthorityClient(EHealthP12 store, EndpointAddress remoteAddress, ILogger<TimeStampAuthorityClient> logger = null)
+            : base(store, new EhBinding(), remoteAddress, logger)
         {
-            _logger = logger;
+
         }
 
-        public TimeStampAuthorityClient(Binding binding, EndpointAddress remoteAddress, ILogger<TimeStampAuthorityClient> logger = null)
-            : base(binding, remoteAddress)
-        {
-            _logger = logger;
-        }
+        public TimeStampAuthorityClient(EHealthP12 store, Binding binding, EndpointAddress remoteAddress, ILogger<TimeStampAuthorityClient> logger = null)
+            : base(store, binding, remoteAddress, logger)
+        { }
 
         public SignResponse Stamp(SignRequest request)
         {

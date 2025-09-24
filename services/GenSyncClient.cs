@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using Egelke.EHealth.Client.Pki;
 using Egelke.EHealth.Etee.Crypto;
 using Egelke.EHealth.Etee.Crypto.Receiver;
 using Egelke.EHealth.Etee.Crypto.Sender;
@@ -19,17 +20,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Egelke.EHealth.Client.Services
 {
-    public class GenSyncClient<Port> : ClientBase<Port> where Port : class
+    public class GenSyncClient<Port> : ServiceClient<Port> where Port : class
     {
         private const string CIN_ENC_NS = "urn:be:cin:encrypted";
-
-        protected readonly ILogger<GenSyncClient<Port>> _logger;
-
-        protected GenSyncClient(Binding binding, EndpointAddress remoteAddress, ILogger<GenSyncClient<Port>> logger = null)
-            : base(binding, remoteAddress)
-        {
-            _logger = logger;
-        }
 
         public LicenseType License { get; set; }
 
@@ -37,67 +30,37 @@ namespace Egelke.EHealth.Client.Services
 
         public bool IsTest { get; set; } = false;
 
-        public EteeConfig Encryption { get; set; } = new EteeConfig();
-
-        public EteeConfig Decryption { get; set; } = new EteeConfig();
-
-
-        protected XmlElement ToXmlElement(XDocument doc)
+        protected GenSyncClient(EHealthP12 store, Binding binding, EndpointAddress remoteAddress, ILogger<GenSyncClient<Port>> logger = null)
+            : base(store, binding, remoteAddress, logger)
         {
-            return ToXmlDocument(doc).DocumentElement;
+
         }
+            
 
-        protected XmlDocument ToXmlDocument(XDocument doc)
-        {
-            var xmlDoc = new XmlDocument();
-            using (var reader = doc.CreateReader())
-            {
-                xmlDoc.Load(reader);
-            }
-            return xmlDoc;
-        }
-
-        protected byte[] ToByteArray(XmlElement el)
-        {
-            var stream = new MemoryStream();
-            var settings = new XmlWriterSettings
-            {
-                Encoding = new UTF8Encoding(false), // Disable BOM
-                Indent = true,                      // Optional: pretty print
-                OmitXmlDeclaration = false,         // Include XML declaration
-                IndentChars = "  ",
-                NewLineHandling = NewLineHandling.Replace
-            };
-            using (var writer = XmlWriter.Create(stream, settings))
-            {
-                el.WriteTo(writer);
-
-            }
-
-            return stream.ToArray();
-        }
-
-        protected SendRequest CreateRequest<SendRequest>(String inputRef, XmlElement value, bool etee = false) where SendRequest : SendRequestType, new()
+        protected SendRequest CreateRequest<SendRequest>(String inputRef, XmlElement value, EncryptionType? etee = null) where SendRequest : SendRequestType, new()
         {
             return CreateRequest<SendRequest>(inputRef, "text/xml", ToByteArray(value), etee);
         }
 
-        protected SendRequest CreateRequest<SendRequest>(String inputRef, String contentType, byte[] value, bool etee = false) where SendRequest : SendRequestType, new()
+        protected SendRequest CreateRequest<SendRequest>(String inputRef, String contentType, byte[] value, EncryptionType? etee = null) where SendRequest : SendRequestType, new()
         {
             byte[] blobValue;
             string blobContentType;
             string contentEncryption;
-            if (etee)
+            switch(etee)
             {
-                blobValue = EncryptForKnown(inputRef, value, contentType);
-                blobContentType = "text/plain";
-                contentEncryption = "encryptedForKnownBED";
-            } 
-            else
-            {
-                blobValue = value;
-                blobContentType = contentType;
-                contentEncryption = null;
+                case null:
+                    blobValue = value;
+                    blobContentType = contentType;
+                    contentEncryption = null;
+                    break;
+                case EncryptionType.EncryptedForKnownBED:
+                    blobValue = EncryptForBed(inputRef, value, contentType);
+                    blobContentType = "text/plain";
+                    contentEncryption = "encryptedForKnownBED";
+                    break;
+                default:
+                    throw new NotImplementedException("Encryption type not supported yet");
             }
 
             var req = new SendRequest()
@@ -116,7 +79,7 @@ namespace Egelke.EHealth.Client.Services
                         {
                             License = License
                         },
-                        CareProvider = CareProvider
+                        CareProvider = CareProvider ?? Sender?.ToCareProvider()
                     }
                 },
                 Detail = new BlobType()
@@ -164,19 +127,14 @@ namespace Egelke.EHealth.Client.Services
             {
                 case Type r when r == typeof(XmlElement):
                     if (contentType != "text/xml" && contentType != "application/xml") throw new InvalidOperationException("content type not matching the requested return type: "+ contentType);
-                    var rspDoc = new XmlDocument();
-                    rspDoc.PreserveWhitespace = true;
-                    rspDoc.Load(new MemoryStream(rspBody));
-                    return rspDoc.DocumentElement as Response;
+                    return ToXmlElement(rspBody) as Response;
                 default:
                     throw new NotImplementedException("Only text/xml responses are supported at this moment");
             }
         }
 
-        protected byte[] EncryptForKnown(String inputRef, byte[] clearText, string contentType)
+        protected byte[] EncryptForBed(String inputRef, byte[] clearText, string contentType)
         {
-
-
             XNamespace ns_e = "urn:be:cin:encrypted";
             var ekc = new XDocument(
                     new XElement(ns_e + "EncryptedKnownContent",
@@ -190,60 +148,25 @@ namespace Egelke.EHealth.Client.Services
                     )
             );
             //injectreply to etk as the first element if needed.
-            if (Decryption?.Etk != null) {
+            if (Sender?.Etk != null) {
                 ekc.Root.AddFirst(
                     new XElement(ns_e + "Reply-to-Etk",
-                            Decryption.Etk.GetEncodedAsString()
+                            Sender.Etk.GetEncodedAsString()
                         )
                 );
             }
-            byte[] ekcBytes = ToByteArray(ToXmlElement(ekc));
-
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug("encrypted content: {0}", Encoding.UTF8.GetString(ekcBytes));
-            }
-
-            var senderFactory = new EhDataSealerFactory();
-            var sender = senderFactory.Create(Level.B_Level, Encryption.Keys.FirstOrDefault());
-
-            Stream ekcStream = new MemoryStream(ekcBytes);
-            Stream ekcEncStream = sender.Seal(ekcStream, Encryption.Etk);
-
-            byte[] ekcEncBytes = new BinaryReader(ekcEncStream).ReadBytes((int)ekcEncStream.Length);
-
-            return ekcEncBytes;
+            return EncryptForService(ToMemoryStream(ToXmlElement(ekc)), Level.B_Level);
         }
 
         protected byte[] DecryptForKnown(byte[] cypherText, out string contentType)
         {
-            var receiverFactory = new DataUnsealerFactory();
-            var receiver = receiverFactory.Create(Level.B_Level, Decryption.Keys.ToArray());
+            XmlElement clearEl = Decrypt<XmlElement>(cypherText);
 
-            Stream cypherStream = new MemoryStream(cypherText);
-            UnsealResult result = receiver.Unseal(cypherStream);
-
-            if (result.SecurityInformation.ValidationStatus != ValidationStatus.Valid)
-                throw new SecurityException("Clear text not valid");
-            if (result.SecurityInformation.TrustStatus == TrustStatus.None)
-                throw new SecurityException("Clear text untrused");
-
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                String msg = new StreamReader(result.UnsealedData).ReadToEnd();
-                _logger.LogDebug("decrypted content: {0}", msg);
-                result.UnsealedData.Position = 0;
-            }
-
-            var encDoc = new XmlDocument();
-            encDoc.PreserveWhitespace = true;
-            encDoc.Load(result.UnsealedData);
-
-            XmlNamespaceManager encMngr = new XmlNamespaceManager(encDoc.NameTable);
+            XmlNamespaceManager encMngr = new XmlNamespaceManager(clearEl.OwnerDocument.NameTable);
             encMngr.AddNamespace("e", CIN_ENC_NS);
 
-            string businessContentStr = encDoc.SelectSingleNode("/e:EncryptedKnownContent/e:BusinessContent", encMngr)?.InnerText;
-            contentType = encDoc.SelectSingleNode("/e:EncryptedKnownContent/e:BusinessContent/@ContentType", encMngr)?.Value;
+            string businessContentStr = clearEl.SelectSingleNode("/e:EncryptedKnownContent/e:BusinessContent", encMngr)?.InnerText;
+            contentType = clearEl.SelectSingleNode("/e:EncryptedKnownContent/e:BusinessContent/@ContentType", encMngr)?.Value;
             //todo::support content encoding
             return Convert.FromBase64String(businessContentStr);
         }

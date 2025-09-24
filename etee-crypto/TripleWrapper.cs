@@ -93,7 +93,7 @@ namespace Egelke.EHealth.Etee.Crypto
 
             this.logger = logger;
             this.level = level;
-            this.signature = signature;
+            this.signature = signature ?? authentication;
             this.authentication = authentication;
             this.timestampProvider = timestampProvider;
             this.extraStore = extraStore;

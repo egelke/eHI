@@ -16,6 +16,7 @@
 /packages/
 eHealth*.*p12
 SSIN*.*p12
+NIHII*.*p12
 *.pwd
 *.pin
 *.ssin

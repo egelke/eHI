@@ -89,6 +89,16 @@ namespace Egelke.EHealth.Etee.Crypto.Receiver
             return Create(level, p12s, null);
         }
 
+        public IDataUnsealer Create(Level? level, EHealthP12 currentP12, params EHealthP12[] expiredP12s)
+        {
+            List<EHealthP12> p12s = new List<EHealthP12>() { 
+                currentP12
+            };
+            p12s.AddRange(expiredP12s);
+
+            return Create(level, p12s.ToArray(), null);
+        }
+
         public IDataUnsealer Create(Level? level, EHealthP12[] p12s, WebKey[] ownWebKeys)
         {
             X509Certificate2Collection encCerts;

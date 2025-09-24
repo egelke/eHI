@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Egelke.EHealth.Client.Pki;
 using Egelke.EHealth.Client.Services;
 using Egelke.EHealth.Client.Services.EtkDepot;
 using Microsoft.Extensions.Logging;
@@ -22,27 +23,25 @@ namespace services_tests
         public EtkDepotTest()
         {
             var etkDepot = new EndpointAddress("https://services-acpt.ehealth.fgov.be/EtkDepot/v1");
-
             target = new EtkDepotClient(etkDepot, loggerFactory.CreateLogger<EtkDepotClient>());
         }
 
 
 
-
         [Fact]
-        public void GetOwnEtk()
+        public void GetPrivateEtk()
         {
             var req = new IdentifierType()
             {
                 Type = "SSIN",
-                Value = ssin,
+                Value = "79021802145",
                 ApplicationID = ""
             };
 
             var rsp = target.GetEtk(req);
 
             Assert.Single(rsp);
-            Assert.Contains("CN=\"SSIN="+ssin+"\"", rsp[0].ToCertificate().Subject);
+            Assert.Contains("CN=\"SSIN=79021802145\"", rsp[0].ToCertificate().Subject);
 
             //File.WriteAllBytes("c:/Data/79021802145.etk", rsp[0].GetEncoded());
         }

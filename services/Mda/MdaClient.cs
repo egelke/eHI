@@ -11,12 +11,13 @@ using System.ServiceModel.Description;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Egelke.EHealth.Client.Pki;
 using Microsoft.Extensions.Logging;
 
 namespace Egelke.EHealth.Client.Services.Mda
 {
 
-    public class McnMdaClient : GenSyncClient<MycarenetMemberDataPortType>, IMda
+    public class MdaClient : GenSyncClient<MycarenetMemberDataPortType>
     {
         private const string SAML2P_NS = "urn:oasis:names:tc:SAML:2.0:protocol";
 
@@ -25,13 +26,14 @@ namespace Egelke.EHealth.Client.Services.Mda
         private const string CIN_TYPES_NS = "urn:be:cin:types:v1";
 
 
-        public McnMdaClient(Binding binding, EndpointAddress remoteAddress, ILogger<McnMdaClient> logger = null) 
-            : base(binding, remoteAddress, logger)
+        public MdaClient(EHealthP12 store, Binding binding, EndpointAddress remoteAddress, ILogger<MdaClient> logger = null) 
+            : base(store, binding, remoteAddress, logger)
         { }
 
         public XmlElement CreateQuery(string ssin, DateTime start, DateTime end, params Facet[] facets)
         {
             string reqId = (IsTest ? "T" : "P") + "MDA" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            var cp = CareProvider ?? Sender?.ToCareProvider();
 
             XNamespace ns_samlp = SAML2P_NS;
             XNamespace ns_saml = SAML2_NS;
@@ -45,7 +47,7 @@ namespace Egelke.EHealth.Client.Services.Mda
                         new XAttribute(XNamespace.Xmlns + "saml", ns_saml),
                         new XElement(ns_saml + "Issuer",
                             new XAttribute("Format", "urn:be:cin:nippin:nihii11"),
-                            CareProvider.Nihii.Value.Value
+                            cp.Nihii.Value.Value
                         ),
                         new XElement(ns_samlp + "Extensions",
                             new XAttribute(XNamespace.Xmlns + "ext", Facet.EXT_NS),
@@ -80,7 +82,7 @@ namespace Egelke.EHealth.Client.Services.Mda
 
             string reqId = query.SelectSingleNode("/saml2p:AttributeQuery/@ID", reqMngr)?.Value?.Substring(1);
 
-            var req = CreateRequest<SendRequestMemberDataType>(reqId, query, etee);
+            var req = CreateRequest<SendRequestMemberDataType>(reqId, query, etee ? EncryptionType.EncryptedForKnownBED : (EncryptionType?) null);
             _logger?.LogInformation("Calling MyCareNet MDA, ref={0}", req.CommonInput.InputReference);
             _logger?.LogDebug("Calling MyCareNet MDA {0} with query: {1}", req.CommonInput.InputReference, query.OuterXml);
 
