@@ -34,7 +34,7 @@ namespace Egelke.EHealth.Client.Security
     /// </summary>
     public class CustomSecurityRequestChannel : IRequestChannel
     {
-        private ILogger _logger;
+        private ILogger<CustomSecurity> _logger;
 
         private IRequestChannel _innerChannel;
 
@@ -45,7 +45,7 @@ namespace Egelke.EHealth.Client.Security
         /// <param name="innerChannel">inner channel to write through</param>
         /// <param name="to">destination address</param>
         /// <param name="via">next hop address</param>
-        public CustomSecurityRequestChannel(ILogger logger, IRequestChannel innerChannel, EndpointAddress to, Uri via)
+        public CustomSecurityRequestChannel(ILogger<CustomSecurity> logger, IRequestChannel innerChannel, EndpointAddress to, Uri via)
         {
             _logger = logger;
             _innerChannel = innerChannel;

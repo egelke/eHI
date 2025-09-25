@@ -26,7 +26,6 @@ namespace services_tests
 
         public IcnMdaRetirementTest()
         {
-            //mdaEp = new EndpointAddress("https://services-acpt.ehealth.fgov.be/IrisCareNet/MemberData/v1");
             var store = new EHealthP12("files/NIHII-RETIREMENT=73999914 20250923-102623.acc.p12", File.ReadAllText("files/NIHII-RETIREMENT=73999914 20250923-102623.acc.p12.pwd"));
 
             var binding = new EhBinding(loggerFactory.CreateLogger<CustomSecurity>());
@@ -35,7 +34,7 @@ namespace services_tests
             //binding.Security.SessionCertificate.Certificate = sessionCert;
             binding.Security.AuthClaims.Add(new Claim("{urn:be:fgov:certified-namespace:ehealth}urn:be:fgov:ehealth:1.0:retirement:nihii-number:recognisedretirement:boolean", null, AuthClaimSet.Dialect));
             binding.Security.AuthClaims.Add(new Claim("{urn:be:fgov:certified-namespace:ehealth}urn:be:fgov:ehealth:1.0:retirement:nihii-number:recognisedretirement:nihii11", null, AuthClaimSet.Dialect));
-            target = new MdaClient(store, binding, new EndpointAddress("https://services-acpt.ehealth.fgov.be/MyCareNet/MemberData/v1"), loggerFactory.CreateLogger<MdaClient>())
+            target = new MdaClient(store, binding, new EndpointAddress("https://services-acpt.ehealth.fgov.be/IrisCareNet/MemberData/v1"), loggerFactory.CreateLogger<MdaClient>())
             {
                 IsTest = true,
                 License = new LicenseType()
@@ -53,11 +52,24 @@ namespace services_tests
 
 
             target.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(loggerFactory.CreateLogger<LoggingMessageInspector>()));
-
-            
-
         }
 
-        
+        [Fact(Skip ="Not ready yet")]
+        public void ClearRequestAndResponse()
+        {
+            //Create the query
+            XmlElement query = target.CreateQuery(
+                File.ReadAllText("files/patient.ssin"),
+                DateTime.Today.AddDays(-2),
+                DateTime.Today.AddDays(-1),
+                Facet.CreateInsurability(Dimension.VALUE_INFORMATION, Dimension.VALUE_OTHER)
+                );
+
+            //Consult to get the assertions
+            var assertions = target.Consult(query);
+
+            //Verify
+            Assert.NotEmpty(assertions);
+        }
     }
 }

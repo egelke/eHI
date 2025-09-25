@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Selectors;
 using System.ServiceModel.Description;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 
 namespace Egelke.EHealth.Client.Security
@@ -30,18 +31,23 @@ namespace Egelke.EHealth.Client.Security
     /// </summary>
     public class CustomClientCredentials : ClientCredentials
     {
+        private readonly ILogger<CustomSecurity> _logger;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public CustomClientCredentials() : base() { }
+        public CustomClientCredentials(ILogger<CustomSecurity> logger = null) : base() 
+        {
+            _logger = logger;
+        }
 
         /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="other">instance to copy from</param>
-        public CustomClientCredentials(ClientCredentials other) : base(other)
+        public CustomClientCredentials(ClientCredentials other, ILogger<CustomSecurity> logger = null) : base(other)
         {
-
+            _logger = logger;
         }
 
         /// <summary>
@@ -50,7 +56,7 @@ namespace Egelke.EHealth.Client.Security
         /// <returns>An custom token manager for eHealth</returns>
         public override SecurityTokenManager CreateSecurityTokenManager()
         {
-            return new CustomSecurityTokenManager(this);
+            return new CustomSecurityTokenManager(this, _logger);
         }
 
         /// <summary>
@@ -59,7 +65,7 @@ namespace Egelke.EHealth.Client.Security
         /// <returns>Clone of the instance</returns>
         protected override ClientCredentials CloneCore()
         {
-            return new CustomClientCredentials(this);
+            return new CustomClientCredentials(this, _logger);
         }
     }
 }

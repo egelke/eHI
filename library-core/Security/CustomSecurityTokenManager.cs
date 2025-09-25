@@ -22,6 +22,7 @@ using System.IdentityModel.Selectors;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace Egelke.EHealth.Client.Security
 {
@@ -30,12 +31,17 @@ namespace Egelke.EHealth.Client.Security
     /// </summary>
     public class CustomSecurityTokenManager : ClientCredentialsSecurityTokenManager
     {
+        private ILogger<CustomSecurity> _logger;
+
         /// <summary>
         /// Copy and conversion constructor.
         /// </summary>
         /// <param name="clientCredentials">instance to copy the properties from</param>
-        public CustomSecurityTokenManager(ClientCredentials clientCredentials)
-            : base(clientCredentials) { }
+        public CustomSecurityTokenManager(ClientCredentials clientCredentials, ILogger<CustomSecurity> logger = null)
+            : base(clientCredentials) 
+        {
+            _logger = logger;
+        }
 
         /// <summary>
         /// Create a token provider.
@@ -44,7 +50,7 @@ namespace Egelke.EHealth.Client.Security
         /// <returns>a new custom token provider</returns>
         public override SecurityTokenProvider CreateSecurityTokenProvider(SecurityTokenRequirement tokenRequirement)
         {
-            return new CustomSecurityTokenProvider(tokenRequirement, ClientCredentials.ClientCertificate.Certificate);
+            return new CustomSecurityTokenProvider(tokenRequirement, ClientCredentials.ClientCertificate.Certificate, _logger);
         }
     }
 }

@@ -114,7 +114,7 @@ namespace Egelke.EHealth.Client
                 var issuedtokenParameters = new CustomIssuedSecurityTokenParameters(AuthClaims, SessionCertificate.Certificate, SessionDuration)
                 {
                     IssuerAddress = IssuerAddress,
-                    IssuerBinding = IssuerBinding ?? new EhBinding(),
+                    IssuerBinding = IssuerBinding,
                     Cache = Cache,
                 };
 

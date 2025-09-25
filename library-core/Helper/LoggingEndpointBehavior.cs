@@ -34,13 +34,18 @@ namespace Egelke.EHealth.Client.Helper
     /// </remarks>
     public class LoggingEndpointBehavior : IEndpointBehavior
     {
-        private readonly ILogger<LoggingMessageInspector> _logger;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="logger">The logger to log the messages too</param>
         public LoggingEndpointBehavior(ILogger<LoggingMessageInspector> logger)
+        {
+            _logger = logger;
+        }
+
+        internal LoggingEndpointBehavior(ILogger logger)
         {
             _logger = logger;
         }

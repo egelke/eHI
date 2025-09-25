@@ -119,7 +119,7 @@ namespace Egelke.EHealth.Client.Security
             ClientCredentials clientCredentials = context.BindingParameters.Find<ClientCredentials>();
             if (!(clientCredentials is CustomClientCredentials))
             {
-                clientCredentials = new CustomClientCredentials(clientCredentials);
+                clientCredentials = new CustomClientCredentials(clientCredentials, _logger);
                 context.BindingParameters.Remove(typeof(ClientCredentials));
                 context.BindingParameters.Add(clientCredentials);
             }

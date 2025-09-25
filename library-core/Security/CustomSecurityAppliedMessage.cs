@@ -42,7 +42,7 @@ namespace Egelke.EHealth.Client.Security
     /// <seealso href="https://github.com/dotnet/wcf/blob/main/src/System.ServiceModel.Primitives/src/System/ServiceModel/Security/SecurityAppliedMessage.cs">Insipred on</seealso>
     public class CustomSecurityAppliedMessage : Message
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<CustomSecurity> _logger;
 
         private readonly Message _innerMessage;
 
@@ -51,7 +51,7 @@ namespace Egelke.EHealth.Client.Security
         /// </summary>
         /// <param name="innerMessage">Message from the previous channels</param>
         /// <param name="logger">optional logger, used to log the signed message to</param>
-        public CustomSecurityAppliedMessage(Message innerMessage, ILogger logger = null)
+        public CustomSecurityAppliedMessage(Message innerMessage, ILogger<CustomSecurity> logger = null)
         {
             _innerMessage = innerMessage;
             _logger = logger;

@@ -41,7 +41,7 @@ namespace Egelke.EHealth.Client.Security
     /// </summary>
     public class CustomSecurityTokenProvider : SecurityTokenProvider
     {
-        
+        private readonly ILogger<CustomSecurity> _logger;
 
         private readonly WSS _wss;
 
@@ -56,8 +56,9 @@ namespace Egelke.EHealth.Client.Security
         /// </summary>
         /// <param name="tokenRequirement">requirements for the provided token</param>
         /// <param name="idCert">the subjects certificate to request a token for</param>
-        public CustomSecurityTokenProvider(SecurityTokenRequirement tokenRequirement, X509Certificate2 idCert)
+        public CustomSecurityTokenProvider(SecurityTokenRequirement tokenRequirement, X509Certificate2 idCert, ILogger<CustomSecurity> logger)
         {
+            _logger = logger;
             _wss = (WSS) tokenRequirement.Properties["wss"];
             _tokenRequirement = tokenRequirement;
             _tokenRequirement.TryGetProperty<CustomIssuedSecurityTokenParameters>(CustomIssuedSecurityTokenParameters.IssuedSecurityTokenParametersProperty, out _tokenParams);
@@ -172,8 +173,9 @@ namespace Egelke.EHealth.Client.Security
         /// <returns>The generic xml version of the token</returns>
         protected SecurityToken CreateSamlHokToken(TimeSpan timeout)
         {
-            var client = new WsTrustClient(_tokenParams.IssuerBinding, _tokenParams.IssuerAddress); //todo::add logging
+            var client = new WsTrustClient(_tokenParams.IssuerBinding ?? new EhBinding(_logger), _tokenParams.IssuerAddress, _logger);
             client.ClientCredentials.ClientCertificate.Certificate = _idCert;
+            if (_logger != null) client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(_logger));
 
             XmlElement assertion = client.RequestTicket(_tokenParams.SessionCertificate, _tokenParams.SessionDuration, _tokenParams.AuthClaims); //todo::use timeout
             return ParseAssertion(assertion);
@@ -188,8 +190,9 @@ namespace Egelke.EHealth.Client.Security
         /// <exception cref="ArgumentException">previous token isn't a generic xml token</exception>
         protected SecurityToken RenewSamlHokToken(SecurityToken previous, TimeSpan timeout)
         {
-            var client = new WsTrustClient(_tokenParams.IssuerBinding, _tokenParams.IssuerAddress); //todo::add logging
+            var client = new WsTrustClient(_tokenParams.IssuerBinding ?? new EhBinding(_logger), _tokenParams.IssuerAddress, _logger);
             client.ClientCredentials.ClientCertificate.Certificate = _idCert;
+            if (_logger != null) client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(_logger));
 
             var xmlToken = previous as GenericXmlSecurityToken ?? throw new ArgumentException("previous token not a GenericXmlSecurityToken", nameof(previous));
             XmlElement assertion = client.RenewTicket(_tokenParams.SessionCertificate, xmlToken.TokenXml); //todo::use timeout

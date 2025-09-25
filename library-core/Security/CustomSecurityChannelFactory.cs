@@ -11,11 +11,11 @@ namespace Egelke.EHealth.Client.Security
 {
     internal class CustomSecurityChannelFactory<TChannel> : IChannelFactory<TChannel>
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<CustomSecurity> _logger;
 
         private IChannelFactory<TChannel> _innerChannelFactory;
 
-        public CustomSecurityChannelFactory(ILogger logger, IChannelFactory<TChannel> innerChannelFactory)
+        public CustomSecurityChannelFactory(ILogger<CustomSecurity> logger, IChannelFactory<TChannel> innerChannelFactory)
         {
             _logger = logger;
             _innerChannelFactory = innerChannelFactory;

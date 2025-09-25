@@ -70,16 +70,16 @@ namespace Egelke.EHealth.Client.Sts.WsTrust200512
     {
         private static readonly Regex ClaimTypeExp = new Regex("({(?<ns>.+)})?(?<name>.+)", RegexOptions.Compiled);
 
-        private readonly ILogger<WsTrustClient> _logger;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="logger">optional logger</param>
-        public WsTrustClient(ILogger<WsTrustClient> logger = null)
+        public WsTrustClient(ILogger logger = null)
             : base()
         {
-            _logger = logger;
+            //_logger = logger;
         }
 
         /// <summary>
@@ -87,10 +87,10 @@ namespace Egelke.EHealth.Client.Sts.WsTrust200512
         /// </summary>
         /// <param name="endpoint">custom endpoint</param>
         /// <param name="logger">optional logger</param>
-        public WsTrustClient(ServiceEndpoint endpoint, ILogger<WsTrustClient> logger = null) :
+        public WsTrustClient(ServiceEndpoint endpoint, ILogger logger = null) :
             base(endpoint)
         {
-            _logger = logger;
+            //_logger = logger;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Egelke.EHealth.Client.Sts.WsTrust200512
         /// <param name="binding">custom binding</param>
         /// <param name="remoteAddress">custom endpoint</param>
         /// <param name="logger">optional logger</param>
-        public WsTrustClient(Binding binding, EndpointAddress remoteAddress, ILogger<WsTrustClient> logger = null) :
+        public WsTrustClient(Binding binding, EndpointAddress remoteAddress, ILogger logger = null) :
             base(binding, remoteAddress)
         {
             _logger = logger;

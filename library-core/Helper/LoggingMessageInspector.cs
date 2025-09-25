@@ -36,13 +36,13 @@ namespace Egelke.EHealth.Client.Helper
 
         XmlWriterSettings _settings;
 
-        private readonly ILogger<LoggingMessageInspector> _logger;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="logger">The logger to log the message to</param>
-        public LoggingMessageInspector(ILogger<LoggingMessageInspector> logger)
+        public LoggingMessageInspector(ILogger logger)
         {
             _logger = logger;
 
