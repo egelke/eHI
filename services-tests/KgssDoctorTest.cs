@@ -12,7 +12,6 @@ using Egelke.EHealth.Client.Helper;
 using Egelke.EHealth.Client.Pki;
 using Egelke.EHealth.Client.Services;
 using Egelke.EHealth.Client.Services.EtkDepot;
-using Egelke.EHealth.Client.Services.Helper;
 using Egelke.EHealth.Client.Services.Kgss;
 using Egelke.EHealth.Client.Sts;
 using Egelke.EHealth.Etee.Crypto;
@@ -35,9 +34,10 @@ namespace services_tests
             var store = new EHealthP12("files/SSIN=79021802145 20250514-082150.acc.p12", File.ReadAllText("files/SSIN=79021802145 20250514-082150.acc.p12.pwd"));
 
             senderClient = new KgssClient(store, kgss, loggerFactory.CreateLogger<KgssClient>());
-            senderClient.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(loggerFactory.CreateLogger<LoggingMessageInspector>()));
-            senderClient.Sender.Id = store["authentication"].ToIdentifierType();
             senderClient.InitEncryptionTokens(new EtkDepotClient(etkDepot));
+
+            senderClient.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(loggerFactory.CreateLogger<LoggingMessageInspector>()));
+
 
             var binding = new EhBinding(loggerFactory.CreateLogger<CustomSecurity>());
             binding.Security.Mode = EhSecurityMode.SamlFromWsTrust;
@@ -48,6 +48,8 @@ namespace services_tests
             receiverClient = new KgssClient(store, binding, kgss, loggerFactory.CreateLogger<KgssClient>());
             receiverClient.Sender.Etk = senderClient.Sender.Etk;
             receiverClient.Service.Etk = senderClient.Service.Etk;
+
+
             receiverClient.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(loggerFactory.CreateLogger<LoggingMessageInspector>()));
         }
 

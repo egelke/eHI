@@ -12,7 +12,6 @@ using System.Xml;
 using System.Xml.Linq;
 using Egelke.EHealth.Client.Pki;
 using Egelke.EHealth.Client.Services.EtkDepot;
-using Egelke.EHealth.Client.Services.Helper;
 using Egelke.EHealth.Client.Sts;
 using Egelke.EHealth.Etee.Crypto;
 using Egelke.EHealth.Etee.Crypto.Receiver;
@@ -61,7 +60,7 @@ namespace Egelke.EHealth.Client.Services
             if (store != null)
             {
                 var idCert = Store["authentication"];
-                Sender.Id = idCert?.ToIdentifierType();
+                Sender = PartyInfo.FromCertificate(idCert);
                 ClientCredentials.ClientCertificate.Certificate = idCert;
             }
         }
@@ -70,15 +69,13 @@ namespace Egelke.EHealth.Client.Services
         {
             if (binding is EhBinding ehBinding && ehBinding.Security.Mode == EhSecurityMode.SamlFromWsTrust && store != null)
             {
-                var id = store["authentication"].ToIdentifierType();
-                switch(id.Type)
+                var id = PartyInfo.FromCertificate(store["authentication"]);
+                if (id.HasId())
                 {
-                    case "SSIN":
-                        ehBinding.Security.AuthClaims.Add(new Claim("{urn:be:fgov:identification-namespace}urn:be:fgov:person:ssin", id.Value, AuthClaimSet.Dialect));
-                        ehBinding.Security.AuthClaims.Add(new Claim("{urn:be:fgov:identification-namespace}urn:be:fgov:ehealth:1.0:certificateholder:person:ssin", id.Value, AuthClaimSet.Dialect));
-                        break;
-                    default:
-                        throw new InvalidOperationException("store id type not supported");
+                    foreach (var claim in id.ToAuthClaimSet())
+                    {
+                        ehBinding.Security.AuthClaims.Add(claim);
+                    }
                 }
             }
             return binding;
@@ -93,8 +90,8 @@ namespace Egelke.EHealth.Client.Services
         {
             if (etkDepot == null) throw new ArgumentNullException(nameof(etkDepot));
 
-            if (Sender.Etk == null && Sender.Id != null) Sender.Etk = etkDepot.GetEtk(Sender.Id).FirstOrDefault();
-            if (Service.Etk == null && Service.Id != null) Service.Etk = etkDepot.GetEtk(Service.Id).FirstOrDefault();
+            if (Sender.Etk == null && Sender.HasId()) Sender.Etk = etkDepot.GetEtk(Sender.ToIdentifierType()).FirstOrDefault();
+            if (Service.Etk == null && Service.HasId()) Service.Etk = etkDepot.GetEtk(Service.ToIdentifierType()).FirstOrDefault();
         }
 
         protected XmlElement ToXmlElement(byte[] bytes)

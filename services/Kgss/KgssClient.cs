@@ -35,11 +35,10 @@ namespace Egelke.EHealth.Client.Services.Kgss
         public KgssClient(EHealthP12 store, Binding binding, EndpointAddress remoteAddress, ILogger<KgssClient> logger = null)
             : base(store, binding, remoteAddress, logger)
         {
-            Service.Id = new IdentifierType()
+            Service = new PartyInfo()
             {
-                Type = "CBE",
-                Value = "0809394427",
-                ApplicationID = "KGSS"
+                Cbe = "0809394427",
+                Application = "KGSS"
             };
         }
 

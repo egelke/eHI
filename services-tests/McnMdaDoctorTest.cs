@@ -44,16 +44,15 @@ namespace services_tests
             };
             target.Sender.Quality = "DOCTOR";
             target.Sender.Nihii11 = "19997341001";
-            target.Service.Id = new IdentifierType()
+            target.Service = new PartyInfo()
             {
-                Type = "CBE",
-                Value = "0820563481",
-                ApplicationID = "MYCARENET"
+                Cbe = "0820563481",
+                Application = "MYCARENET"
             };
+            target.InitEncryptionTokens(new EtkDepotClient(new EndpointAddress("https://services-acpt.ehealth.fgov.be/EtkDepot/v1")));
+
 
             target.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(loggerFactory.CreateLogger<LoggingMessageInspector>()));
-
-            target.InitEncryptionTokens(new EtkDepotClient(new EndpointAddress("https://services-acpt.ehealth.fgov.be/EtkDepot/v1")));
         }
 
         [Fact]
