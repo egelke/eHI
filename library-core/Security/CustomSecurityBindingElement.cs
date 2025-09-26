@@ -62,6 +62,7 @@ namespace Egelke.EHealth.Client.Security
         {
             this.MessageSecurityVersion = that.MessageSecurityVersion;
             this.SignParts = that.SignParts;
+            this.Tracing = that.Tracing;
 
             this._security = that._security;
             this._logger = that._logger;
@@ -76,6 +77,11 @@ namespace Egelke.EHealth.Client.Security
         /// Parts to sign.
         /// </summary>
         public SignParts SignParts { get; set; }
+
+        /// <summary>
+        /// Tracing information to use
+        /// </summary>
+        public TracingConfig Tracing { get; set; }
 
         /// <summary>
         /// Clone the instance
@@ -128,7 +134,8 @@ namespace Egelke.EHealth.Client.Security
                 ClientCredentials = clientCredentials,
                 MessageSecurityVersion = this.MessageSecurityVersion,
                 SignParts = this.SignParts,
-                Security = this._security
+                Security = this._security,
+                Tracing = this.Tracing
             };
         }
     }

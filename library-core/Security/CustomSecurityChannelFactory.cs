@@ -30,6 +30,11 @@ namespace Egelke.EHealth.Client.Security
 
         public CustomSecurity Security { get; set; }
 
+        /// <summary>
+        /// Tracing information to use
+        /// </summary>
+        public TracingConfig Tracing { get; set; }
+
 
         public T GetProperty<T>() where T : class
         {
@@ -133,12 +138,14 @@ namespace Egelke.EHealth.Client.Security
            
             if (typeof(TChannel) == typeof(IRequestChannel))
             {
-                return (TChannel)(object)new CustomSecurityRequestChannel(_logger, ((IChannelFactory<IRequestChannel>)_innerChannelFactory).CreateChannel(to, via), to, via)
+                var innerChannel = ((IChannelFactory<IRequestChannel>)_innerChannelFactory).CreateChannel(to, via);
+                return (TChannel)(object)new CustomSecurityRequestChannel(_logger, innerChannel, to, via)
                 {
                     ClientCredentials = this.ClientCredentials,
                     MessageSecurityVersion = this.MessageSecurityVersion,
                     SignParts = this.SignParts,
                     Security = this.Security,
+                    Tracing = this.Tracing
                 };
             }
             else

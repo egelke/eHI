@@ -234,6 +234,7 @@ namespace library_core_tests
         public void EhealthX509(X509Certificate2 cert)
         {
             var binding = new EhBinding(loggerFactory.CreateLogger<CustomSecurity>());
+            binding.Tracing.Contact = "info@egelke.net";
 
             var ep = new EndpointAddress("https://localhost:8080/services/echo/eHealth/x509");
             ChannelFactory<IEchoService> channelFactory = new ChannelFactory<IEchoService>(binding, ep);

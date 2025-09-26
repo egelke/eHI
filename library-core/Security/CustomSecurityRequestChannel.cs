@@ -74,6 +74,11 @@ namespace Egelke.EHealth.Client.Security
         public CustomSecurity Security { get; set; }
 
         /// <summary>
+        /// Tracing information to use
+        /// </summary>
+        public TracingConfig Tracing {  get; set; }
+
+        /// <summary>
         /// Final destination.
         /// </summary>
         public EndpointAddress RemoteAddress { get; }
@@ -328,6 +333,16 @@ namespace Egelke.EHealth.Client.Security
 
         private Message Wrap(Message message)
         {
+            if (Tracing != null) {
+                var httpRequest = new HttpRequestMessageProperty();
+
+                if (Tracing?.Contact != null) 
+                    httpRequest.Headers["From"] = Tracing.Contact;
+                httpRequest.Headers["User-Agent"] = Tracing.ToAgent();
+
+                message.Properties[HttpRequestMessageProperty.Name] = httpRequest;
+            }
+
             return new CustomSecurityAppliedMessage(message, _logger)
             {
                 ClientCredentials = this.ClientCredentials,

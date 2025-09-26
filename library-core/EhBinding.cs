@@ -44,6 +44,11 @@ namespace Egelke.EHealth.Client
         public CustomSecurity Security { get; } = new CustomSecurity();
 
         /// <summary>
+        /// Configure how the data used for tracing info send to eHealth.
+        /// </summary>
+        public TracingConfig Tracing { get; } = new TracingConfig();
+
+        /// <summary>
         /// Specifies if proxy config should be used for locahost or not.
         /// </summary>
         /// <value>
@@ -93,7 +98,8 @@ namespace Egelke.EHealth.Client
             return new CustomSecurityBindingElement(Security, Logger)
             {
                 MessageSecurityVersion = SecurityVersion.WSSecurity11,
-                SignParts = SignParts.All
+                SignParts = SignParts.All,
+                Tracing = Tracing,
             };
         }
 
@@ -121,7 +127,7 @@ namespace Egelke.EHealth.Client
                 AuthenticationScheme = System.Net.AuthenticationSchemes.Anonymous,
                 BypassProxyOnLocal = BypassProxyOnLocal,
                 UseDefaultWebProxy = UseDefaultWebProxy,
-                ProxyAddress = ProxyAddress
+                ProxyAddress = ProxyAddress,
             };
         }
 
