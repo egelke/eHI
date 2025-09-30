@@ -33,6 +33,7 @@ namespace services_tests
             //binding.Security.SessionCertificate.Certificate = sessionCert;
             binding.Security.AuthClaims.Add(new Claim("{urn:be:fgov:certified-namespace:ehealth}urn:be:fgov:person:ssin:doctor:boolean", null, AuthClaimSet.Dialect));
             binding.Security.AuthClaims.Add(new Claim("{urn:be:fgov:certified-namespace:ehealth}urn:be:fgov:person:ssin:ehealth:1.0:doctor:nihii11", null, AuthClaimSet.Dialect));
+            binding.Tracing.Contact = "bryan@egelke.net";
             target = new MdaClient(store, binding, new EndpointAddress("https://services-acpt.ehealth.fgov.be/MyCareNet/MemberData/v1"), loggerFactory.CreateLogger<MdaClient>())
             {
                 IsTest = true,
